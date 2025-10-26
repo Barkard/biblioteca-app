@@ -20,6 +20,9 @@ class ReservationsTable
                     ->sortable(),
                 IconColumn::make('status')
                     ->boolean(),
+                TextColumn::make('user_id')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

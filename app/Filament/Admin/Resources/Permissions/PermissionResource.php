@@ -20,7 +20,7 @@ class PermissionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Permisos';
+    protected static ?string $recordTitleAttribute = 'Permission';
 
     public static function form(Schema $schema): Schema
     {

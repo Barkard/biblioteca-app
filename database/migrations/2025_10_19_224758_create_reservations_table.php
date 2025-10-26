@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->date('reservation_date');
             $table->boolean('status')->default(true);
+
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

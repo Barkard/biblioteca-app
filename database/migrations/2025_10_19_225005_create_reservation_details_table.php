@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('reservation_details', function (Blueprint $table) {
             $table->id();
             $table->boolean('status')->default(true);
+
+            $table->foreignId('book_id')->constrained('books')->onDelete('restrict');
+            $table->foreignId('reservation_id')->constrained('reservations')->onDelete('restrict');
             $table->timestamps();
         });
     }

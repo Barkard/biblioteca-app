@@ -18,11 +18,11 @@ class LoanReturnsTable
                 TextColumn::make('return_date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('loan_detail')
-                    ->numeric()
-                    ->sortable(),
                 IconColumn::make('status')
                     ->boolean(),
+                TextColumn::make('user_id')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

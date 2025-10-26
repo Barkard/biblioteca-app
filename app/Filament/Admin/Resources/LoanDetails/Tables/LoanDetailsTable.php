@@ -20,6 +20,12 @@ class LoanDetailsTable
                 TextColumn::make('return_date')
                     ->date()
                     ->sortable(),
+                TextColumn::make('copy_book_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('loan_return_id')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

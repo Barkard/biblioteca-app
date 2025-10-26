@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('copy_books', function (Blueprint $table) {
+        Schema::create('loan_details', function (Blueprint $table) {
             $table->id();
-            $table->string('cota');
             $table->boolean('status')->default(true);
+            $table->date('return_date')->nullable();
 
-            $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
+            $table->foreignId('copy_book_id')->constrained('copy_books')->onDelete('restrict');
+            $table->foreignId('loan_return_id')->constrained('loan_returns')->onDelete('restrict');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('copy_books');
+        Schema::dropIfExists('loan_details');
     }
 };

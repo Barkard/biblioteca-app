@@ -17,6 +17,8 @@ class UsersTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('last_name')
+                    ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
@@ -30,10 +32,13 @@ class UsersTable
                     ->searchable(),
                 IconColumn::make('status')
                     ->boolean(),
+                TextColumn::make('role_id')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Fecha de creación')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

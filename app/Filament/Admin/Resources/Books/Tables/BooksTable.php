@@ -24,6 +24,12 @@ class BooksTable
                 TextColumn::make('date_published')
                     ->date()
                     ->sortable(),
+                TextColumn::make('author_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('category_id')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

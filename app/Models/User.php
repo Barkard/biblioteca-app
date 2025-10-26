@@ -19,8 +19,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
+        'role_id',
         'email',
         'password',
+        'nationality',
         'id_user',
         'birthdate',
         'status'
@@ -48,4 +51,31 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    // asignar role id 3 al crear el usuario
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if (is_null($user->role_id)) {
+                $user->role_id = 3; // ID del role 'User'
+            }
+        });
+    }
+
 }
+
+/*
+
+
+php artisan make:filament-resource ReservationDetail --generate
+*/

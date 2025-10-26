@@ -7,9 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Permission extends Model
 {
     protected $fillable = [
-        'name',
-        'description',
+        'module_id',
+        'role_id',
+        'create',
+        'read',
+        'update',
+        'delete',
     ];
+
+    public function module()
+    {
+        return $this->belongsTo(Module::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }
 
 /*

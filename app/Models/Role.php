@@ -3,13 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Module extends Model
+class Role extends Model
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 
     public function permissions()
     {

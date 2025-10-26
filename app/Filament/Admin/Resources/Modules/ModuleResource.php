@@ -20,7 +20,7 @@ class ModuleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Modulos';
+    protected static ?string $recordTitleAttribute = 'Module';
 
     public static function form(Schema $schema): Schema
     {

@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
+
+            $table->boolean('create')->default(false);
+            $table->boolean('read')->default(false);
+            $table->boolean('update')->default(false);
+            $table->boolean('delete')->default(false);
+
+            $table->foreignId('role_id')->constrained('roles')->onDelete('restrict');
+            $table->foreignId('module_id')->constrained('modules')->onDelete('restrict');
             $table->timestamps();
         });
     }

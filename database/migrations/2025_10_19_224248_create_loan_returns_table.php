@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('loan_returns', function (Blueprint $table) {
             $table->id();
             $table->date('return_date')->nullable();
-            $table->unsignedBigInteger('loan_detail');
             $table->boolean('status')->default(true);
+
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@ class AuthorResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Autores';
+    protected static ?string $recordTitleAttribute = 'Author';
 
     public static function form(Schema $schema): Schema
     {

@@ -17,6 +17,12 @@ class ReservationDetailsTable
             ->columns([
                 IconColumn::make('status')
                     ->boolean(),
+                TextColumn::make('book_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('reservation_id')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
