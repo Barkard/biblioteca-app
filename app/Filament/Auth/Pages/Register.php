@@ -7,6 +7,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
 use Filament\Auth\Pages\Register as BaseRegister;
 
 class Register extends BaseRegister
@@ -21,8 +22,21 @@ class Register extends BaseRegister
                 // name, email, password, passwordConfirmation come from the base implementation
                 $this->getNameFormComponent(),
 
+                TextInput::make('last_name')
+                    ->label('Apellido')
+                    ->required(),
+
+                 Select::make('nationality')
+                    ->options([
+                    'V' => 'Venezolano',
+                    'E' => 'Extranjero',
+                    'J' => 'Juridica',
+                    'G' => 'Gubernamental',
+                    ])
+                    ->required(),
+
                 TextInput::make('id_user')
-                    ->label('ID Usuario')
+                    ->label('Cedula de Identidad')
                     ->required()
                     ->unique($this->getUserModel()),
 

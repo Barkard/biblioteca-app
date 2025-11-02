@@ -7,6 +7,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 
 class EditProfile extends BaseEditProfile
@@ -16,6 +17,19 @@ class EditProfile extends BaseEditProfile
         return $schema
             ->components([
                 $this->getNameFormComponent(),
+
+                TextInput::make('last_name')
+                    ->label('Apellido')
+                    ->required(),
+
+                Select::make('nationality')
+                    ->options([
+                    'V' => 'Venezolano',
+                    'E' => 'Extranjero',
+                    'J' => 'Juridica',
+                    'G' => 'Gubernamental',
+                    ])
+                    ->required(),
 
                 TextInput::make('id_user')
                     ->label('ID Usuario')

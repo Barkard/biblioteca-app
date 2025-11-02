@@ -3,4 +3,7 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\Filament\AdminPanelProvider::class,
+    App\Providers\Filament\GlobalPanelPanelProvider::class,
+    App\Providers\Filament\GlobalPanelProvider::class,
+    App\Providers\Filament\GlobalPanelProviderPanelProvider::class,
 ];

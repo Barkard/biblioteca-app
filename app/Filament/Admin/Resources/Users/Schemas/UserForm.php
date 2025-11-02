@@ -29,10 +29,10 @@ class UserForm
                 ->required(),
                 Select::make('nationality')
                 ->options([
-                    'V' => 'Venezuelan',
-                    'E' => 'Foreigner',
-                    'J' => 'Juridical Entity',
-                    'G' => 'Governmental Entity',
+                    'V' => 'Venezolano',
+                    'E' => 'Extranjero',
+                    'J' => 'Juridica',
+                    'G' => 'Gubernamental',
                     ])
                     ->required(),
                 TextInput::make('id_user')

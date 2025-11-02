@@ -20,25 +20,28 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\EnsureUserHasRole;
 
-class AdminPanelProvider extends PanelProvider
+class GlobalPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('global')
+            ->path('global')
             ->login(\App\Filament\Auth\Pages\Login::class)
-            ->profile(\App\Filament\Auth\Pages\EditProfile::class) // ← OPCIONAL: perfil de usuario
+            ->registration(action: \App\Filament\Auth\Pages\Register::class) // opcional
+            ->passwordReset()
+            ->emailVerification()
+            ->profile(\App\Filament\Auth\Pages\EditProfile::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
-            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
+            ->discoverResources(in: app_path('Filament/global/Resources'), for: 'App\Filament\global\Resources')
+            ->discoverPages(in: app_path('Filament/global/Pages'), for: 'App\Filament\global\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
+            ->discoverWidgets(in: app_path('Filament/global/Widgets'), for: 'App\Filament\global\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
@@ -48,16 +51,12 @@ class AdminPanelProvider extends PanelProvider
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
                 AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+                // Solo requiere autenticación; NO verifica role
             ->authMiddleware([
-                EnsureUserHasRole::class . ':admin', // ← Agregar middleware con parámetro
+                EnsureUserHasRole::class . ':global', // ← Agregar middleware con parámetro
                 Authenticate::class,
-             //  EnsureUserHasRole::class,
             ]);
     }
 }
