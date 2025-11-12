@@ -46,10 +46,6 @@ class Register extends BaseRegister
                     ->label('Fecha de nacimiento')
                     ->required(),
 
-                Toggle::make('status')
-                    ->label('Activo')
-                    ->default(true),
-
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
             ]);

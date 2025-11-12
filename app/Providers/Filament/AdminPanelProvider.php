@@ -26,6 +26,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->brandName(config('app.name'))
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Auth\Pages\Login::class)
