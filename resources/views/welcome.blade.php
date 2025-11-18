@@ -50,8 +50,8 @@
                 <a href="{{ url('/dashboard') }}" class="px-4 py-1.5 rounded-md text-sm bg-slate-100 dark:bg-slate-800 border border-transparent hover:opacity-90">Dashboard</a>
             @else
                 @php
-                    $login = function_exists('filament') ? filament()->getLoginUrl() : url('/panel/login');
-                    $register = function_exists('filament') ? filament()->getRegistrationUrl() : url('/panel/register');
+                    $login = function_exists('filament') ? filament()->getLoginUrl() : url('/global/login');
+                    $register = url('/global/register');
                 @endphp
 
                 <a href="{{ $login }}" class="px-4 py-1.5 rounded-md text-sm bg-amber-500 text-white hover:opacity-95">Iniciar sesión</a>

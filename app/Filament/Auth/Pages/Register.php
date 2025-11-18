@@ -9,6 +9,10 @@ use Filament\Schemas\Components\Component;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\Select;
 use Filament\Auth\Pages\Register as BaseRegister;
+use filament\Support\Rules\Password;
+use Illuminate\Validation\Rule;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class Register extends BaseRegister
 {
@@ -19,7 +23,7 @@ class Register extends BaseRegister
     {
         return $schema
             ->components([
-                // name, email, password, passwordConfirmation come from the base implementation
+
                 $this->getNameFormComponent(),
 
                 TextInput::make('last_name')
@@ -40,7 +44,35 @@ class Register extends BaseRegister
                     ->required()
                     ->unique($this->getUserModel()),
 
-                $this->getEmailFormComponent(),
+                TextInput::make('email')
+    ->label('Correo')
+    ->email()
+    ->required()
+    ->reactive()
+    ->afterStateUpdated(function ($state) {
+        $validator = Validator::make(
+            ['email' => $state],
+            [
+                'email' => ['required', 'email', Rule::unique(User::class, 'email')],
+            ]
+        );
+
+        if ($validator->fails()) {
+            $message = $validator->errors()->first('email');
+
+            // Añadimos el error a varias keys posibles para asegurar que Filament lo pinte
+            $this->addError('email', $message);
+            $this->addError('form.email', $message);
+            $this->addError('data.email', $message);
+        } else {
+            // Limpiamos todas las posibles keys
+            $this->resetErrorBag('email');
+            $this->resetErrorBag('form.email');
+            $this->resetErrorBag('data.email');
+        }
+    }),
+
+
 
                 DatePicker::make('birthdate')
                     ->label('Fecha de nacimiento')
@@ -51,16 +83,9 @@ class Register extends BaseRegister
             ]);
     }
 
-    /**
-     * Mutate the form data before register so fields are saved correctly.
-     * Keep the password handling from the base class (already hashed via dehydrate).
-     *
-     * @param array<string,mixed> $data
-     * @return array<string,mixed>
-     */
     protected function mutateFormDataBeforeRegister(array $data): array
     {
-        // Ensure status is boolean and birthdate format is stored as string (Y-m-d)
+
         if (array_key_exists('status', $data)) {
             $data['status'] = (bool) $data['status'];
         }
