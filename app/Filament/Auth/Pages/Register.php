@@ -42,35 +42,80 @@ class Register extends BaseRegister
                 TextInput::make('id_user')
                     ->label('Cedula de Identidad')
                     ->required()
-                    ->unique($this->getUserModel()),
+                    ->reactive()
+                    ->live()
+                    ->afterStateUpdated(function ($state) {
+                        // custom message for unique validation
+                        $validator = Validator::make(
+                            ['id_user' => $state],
+                            [
+                                'id_user' => ['required', 'numeric', Rule::unique(User::class, 'id_user')],
+                            ],
+                            [
+                                'required' => 'La cédula de identidad es obligatoria.',
+                                'numeric' => 'La cédula de identidad debe ser un número.',
+                                'unique' => 'Esta cédula de identidad ya se encuentra registrada.',
+                            ]
+                            
+                        );
+                        // mostrar mensaje de error personalizado
+                        if ($validator->fails()) {
+                            $message = $validator->errors()->first('id_user');
+
+                            // Limpiamos todas las posibles keys
+                            $this->resetErrorBag('id_user');
+                            $this->resetErrorBag('form.id_user');
+                            $this->resetErrorBag('data.id_user');
+
+                            // Añadimos el error a varias keys posibles para asegurar que Filament lo pinte y mostrar el mensaje personalizado
+                            $this->addError('id_user', $message);
+                            $this->addError('form.id_user', $message);
+                            $this->addError('data.id_user', $message);
+                        } else {
+                            // Limpiamos todas las posibles keys
+                            $this->resetErrorBag('id_user');
+                            $this->resetErrorBag('form.id_user');
+                            $this->resetErrorBag('data.id_user');
+                        }
+                    }),
 
                 TextInput::make('email')
-    ->label('Correo')
-    ->email()
-    ->required()
-    ->reactive()
-    ->afterStateUpdated(function ($state) {
-        $validator = Validator::make(
-            ['email' => $state],
-            [
-                'email' => ['required', 'email', Rule::unique(User::class, 'email')],
-            ]
-        );
+                ->label('Correo')
+                ->email()
+                ->required()
+                ->reactive()
+                ->afterStateUpdated(function ($state) {
+                    $validator = Validator::make(
+                        ['email' => $state],
+                        [
+                            'email' => ['required', 'email', Rule::unique(User::class, 'email')],
+                        ],
+                        [
+                            'required' => 'El correo electrónico es obligatorio.',
+                            'email' => 'Debe ingresar un correo electrónico válido.',
+                            'unique' => 'Este correo electrónico ya se encuentra registrado.',
+                        ]
+                    );
 
-        if ($validator->fails()) {
-            $message = $validator->errors()->first('email');
+                    if ($validator->fails()) {
+                        $message = $validator->errors()->first('email');
 
-            // Añadimos el error a varias keys posibles para asegurar que Filament lo pinte
-            $this->addError('email', $message);
-            $this->addError('form.email', $message);
-            $this->addError('data.email', $message);
-        } else {
-            // Limpiamos todas las posibles keys
-            $this->resetErrorBag('email');
-            $this->resetErrorBag('form.email');
-            $this->resetErrorBag('data.email');
-        }
-    }),
+                        // Limpiamos todas las posibles keys
+                        $this->resetErrorBag('email');
+                        $this->resetErrorBag('form.email');
+                        $this->resetErrorBag('data.email');
+
+                        // Añadimos el error a varias keys posibles para asegurar que Filament lo pinte
+                        $this->addError('email', $message);
+                        $this->addError('form.email', $message);
+                        $this->addError('data.email', $message);
+                    } else {
+                        // Limpiamos todas las posibles keys
+                        $this->resetErrorBag('email');
+                        $this->resetErrorBag('form.email');
+                        $this->resetErrorBag('data.email');
+                    }
+                }),
 
 
 
