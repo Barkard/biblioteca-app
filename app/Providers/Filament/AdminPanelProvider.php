@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Auth\Pages\Login::class)
+            ->registration(action: \App\Filament\Auth\Pages\Register::class) // opcional
             ->profile(\App\Filament\Auth\Pages\EditProfile::class) // ← OPCIONAL: perfil de usuario
             ->colors([
                 'primary' => Color::Amber,
