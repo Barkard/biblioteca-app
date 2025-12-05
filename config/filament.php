@@ -118,11 +118,10 @@ return [
     'system_route_prefix' => 'filament',
 
     
-    'default' => 'global', // Cambia el panel por defecto a Global
+    'default' => 'admin', // Usar sólo el panel admin
 
     'panels' => [
-        'global' => \App\Providers\GlobalPanelProvider::class,
-        'admin' => \App\Providers\AdminPanelProvider::class,
+        'admin' => \App\Providers\Filament\AdminPanelProvider::class,
     ]
 
 ];
