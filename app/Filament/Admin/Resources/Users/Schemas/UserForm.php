@@ -17,7 +17,11 @@ class UserForm
             ->components([
                 TextInput::make('name')
                     ->required(),
+                TextInput::make('second_name')
+                    ->required(),
                 TextInput::make('last_name')
+                    ->required(),
+                TextInput::make('second_last_name')
                     ->required(),
                 TextInput::make('email')
                     ->label('Email address')

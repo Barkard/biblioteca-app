@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Authors\Schemas;
+namespace App\Filament\Admin\Resources\Publishers\Schemas;
 
-use App\Models\Author; // Asumiendo que existe un modelo Author
+use App\Models\Publisher;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Validation\Rule;
 
-class AuthorForm
+class PublisherForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Nombre del Autor')
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255)
                     ->validationMessages([
-                        'required' => 'El nombre del autor es obligatorio.',
-                        'unique' => 'Este nombre de autor ya está registrado. Por favor, elige otro.',
-                        'maxLength' => 'El nombre no puede exceder los :max caracteres.',
+                        'required' => 'El nombre de esta Editorial es obligatorio.',
+                        'unique' => 'Esta Editorial ya está registrado. Por favor, elige otro.',
+                        'maxLength' => 'Haz excedido el numero :max de caracteres.',
                     ]),
             ]);
     }

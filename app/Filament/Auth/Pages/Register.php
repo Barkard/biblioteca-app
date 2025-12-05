@@ -26,8 +26,16 @@ class Register extends BaseRegister
 
                 $this->getNameFormComponent(),
 
+                TextInput::make('second_name')
+                    ->label('Segundo Nombre')
+                    ->required(),
+
                 TextInput::make('last_name')
                     ->label('Apellido')
+                    ->required(),
+
+                TextInput::make('second_last_name')
+                    ->label('Segundo Apellido')
                     ->required(),
 
                  Select::make('nationality')
@@ -43,9 +51,7 @@ class Register extends BaseRegister
                     ->label('Cedula de Identidad')
                     ->required()
                     ->reactive()
-                    ->live()
                     ->afterStateUpdated(function ($state) {
-                        // custom message for unique validation
                         $validator = Validator::make(
                             ['id_user' => $state],
                             [
@@ -56,7 +62,7 @@ class Register extends BaseRegister
                                 'numeric' => 'La cédula de identidad debe ser un número.',
                                 'unique' => 'Esta cédula de identidad ya se encuentra registrada.',
                             ]
-                            
+
                         );
                         // mostrar mensaje de error personalizado
                         if ($validator->fails()) {

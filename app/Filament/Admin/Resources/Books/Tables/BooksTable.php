@@ -21,13 +21,16 @@ class BooksTable
                     ->boolean(),
                 TextColumn::make('Edition')
                     ->searchable(),
+                TextColumn::make('publisher.name')
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('date_published')
                     ->date()
                     ->sortable(),
-                TextColumn::make('author_id')
+                TextColumn::make('author.name')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('category_id')
+                TextColumn::make('category.name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')

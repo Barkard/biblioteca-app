@@ -10,6 +10,7 @@ class Book extends Model
         'title',
         'author_id',
         'category_id',
+        'publisher_id',
         'status',
         'Edition',
         'date_published',
@@ -33,5 +34,10 @@ class Book extends Model
     public function reservationDetails()
     {
         return $this->hasMany(ReservationDetail::class);
+    }
+
+    public function publisher()
+    {
+        return $this->belongsTo(Publisher::class);
     }
 }

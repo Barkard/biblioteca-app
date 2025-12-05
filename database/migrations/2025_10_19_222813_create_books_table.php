@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->foreignId('author_id')->constrained('authors')->onDelete('restrict');
             $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
+            $table->foreignId('publisher_id')->constrained('publishers')->onDelete('restrict');
             $table->timestamps();
         });
     }
