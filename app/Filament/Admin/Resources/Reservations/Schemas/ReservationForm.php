@@ -16,9 +16,10 @@ class ReservationForm
         return $schema
             ->components([
                 DatePicker::make('reservation_date')
+                    ->label('Fecha de Reserva')
                     ->required(),
                 Select::make('user_id')
-                    ->label('User')
+                    ->label('Usuario')
                     ->options(function () {
                         return User::query()
                         ->orderBy('name')
@@ -32,6 +33,7 @@ class ReservationForm
                     ->preload()
                     ->required(),
                 Toggle::make('status')
+                    ->label('Estado')
                     ->required(),
                 ]);
     }

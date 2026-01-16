@@ -22,6 +22,11 @@ class PublisherResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Editorial';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+         return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return PublisherForm::configure($schema);

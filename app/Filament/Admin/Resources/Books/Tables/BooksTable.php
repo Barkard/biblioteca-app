@@ -16,28 +16,35 @@ class BooksTable
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label('Título')
                     ->searchable(),
-                IconColumn::make('status')
-                    ->boolean(),
+
                 TextColumn::make('Edition')
+                    ->label('Edición')
                     ->searchable(),
                 TextColumn::make('publisher.name')
+                    ->label('Editorial')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('date_published')
+                    ->label('Fecha de Publicación')
                     ->date()
                     ->sortable(),
                 TextColumn::make('author.name')
+                    ->label('Autor')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('category.name')
+                    ->label('Categoría')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Creado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Actualizado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

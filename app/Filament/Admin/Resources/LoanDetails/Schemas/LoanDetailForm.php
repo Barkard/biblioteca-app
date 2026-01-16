@@ -15,16 +15,18 @@ class LoanDetailForm
         return $schema
             ->components([
                 Toggle::make('status')
+                    ->label('Estado')
                     ->required(),
-                DatePicker::make('return_date'),
+                DatePicker::make('return_date')
+                    ->label('Fecha de Devolución'),
                 Select::make('copy_book_id')
-                    ->label('Copia')
+                    ->label('Ejemplar')
                     ->relationship('copyBook', 'cota')
                     ->searchable()
                     ->preload()
                     ->required(),
                 Select::make('loan_return_id')
-                    ->label('Devolución')
+                    ->label('Préstamo')
                     ->relationship('loanReturn', 'id')
                     ->searchable()
                     ->preload()

@@ -16,18 +16,23 @@ class ReservationDetailsTable
         return $table
             ->columns([
                 IconColumn::make('status')
+                    ->label('Estado')
                     ->boolean(),
-                TextColumn::make('book_id')
+                TextColumn::make('book.title')
+                    ->label('Libro')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('reservation_id')
+                TextColumn::make('reservation.id')
+                    ->label('Reserva')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Creado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Actualizado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

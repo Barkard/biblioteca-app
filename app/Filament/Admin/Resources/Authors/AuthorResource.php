@@ -22,6 +22,11 @@ class AuthorResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Author';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+         return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return AuthorForm::configure($schema);

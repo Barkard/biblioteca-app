@@ -20,7 +20,11 @@ class LoanDetailResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'LoanDetail';
+    protected static ?string $modelLabel = 'Detalle de Préstamo';
+    protected static ?string $pluralModelLabel = 'Detalles de Préstamos';
+    protected static ?string $navigationLabel = 'Detalles de Préstamos';
+
+    protected static ?string $recordTitleAttribute = 'id';
 
     public static function form(Schema $schema): Schema
     {

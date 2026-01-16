@@ -16,21 +16,27 @@ class LoanDetailsTable
         return $table
             ->columns([
                 IconColumn::make('status')
+                    ->label('Estado')
                     ->boolean(),
                 TextColumn::make('return_date')
+                    ->label('Fecha de Devolución')
                     ->date()
                     ->sortable(),
-                TextColumn::make('copy_book_id')
+                TextColumn::make('copyBook.cota')
+                    ->label('Ejemplar')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('loan_return_id')
+                TextColumn::make('loanReturn.id')
+                    ->label('Préstamo')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Creado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Actualizado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

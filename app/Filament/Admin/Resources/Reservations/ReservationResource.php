@@ -20,7 +20,11 @@ class ReservationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Reservation';
+    protected static ?string $modelLabel = 'Reserva';
+    protected static ?string $pluralModelLabel = 'Reservas';
+    protected static ?string $navigationLabel = 'Reservas';
+
+    protected static ?string $recordTitleAttribute = 'id';
 
     public static function form(Schema $schema): Schema
     {

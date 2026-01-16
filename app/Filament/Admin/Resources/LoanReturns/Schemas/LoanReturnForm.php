@@ -15,11 +15,13 @@ class LoanReturnForm
     {
         return $schema
             ->components([
-                DatePicker::make('return_date'),
+                DatePicker::make('return_date')
+                    ->label('Fecha de Devolución'),
                 Toggle::make('status')
+                    ->label('Estado')
                     ->required(),
                 Select::make('user_id')
-                    ->label('User')
+                    ->label('Usuario')
                     ->options(function () {
                         return User::query()
                             ->orderBy('name')

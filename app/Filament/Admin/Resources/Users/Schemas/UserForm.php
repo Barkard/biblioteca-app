@@ -16,33 +16,41 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Primer Nombre')
                     ->required(),
                 TextInput::make('second_name')
+                    ->label('Segundo Nombre')
                     ->required(),
                 TextInput::make('last_name')
+                    ->label('Primer Apellido')
                     ->required(),
                 TextInput::make('second_last_name')
+                    ->label('Segundo Apellido')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label('Correo Electrónico')
                     ->email()
                     ->required(),
-                DatePicker::make('birthdate'),
+                DatePicker::make('birthdate')
+                    ->label('Fecha de Nacimiento'),
                 TextInput::make('password')
+                ->label('Contraseña')
                 ->password()
                 ->required(),
                 Select::make('nationality')
+                ->label('Nacionalidad')
                 ->options([
                     'V' => 'Venezolano',
                     'E' => 'Extranjero',
-                    'J' => 'Juridica',
+                    'J' => 'Jurídica',
                     'G' => 'Gubernamental',
                     ])
                     ->required(),
                 TextInput::make('id_user')
-                    ->label('Cedula / Rif')
+                    ->label('Cédula / RIF')
                     ->required(),
                 Toggle::make('status')
+                    ->label('Estado')
                     ->required(),
                 DateTimePicker::make('created_at')
                     ->label('Fecha de creación')

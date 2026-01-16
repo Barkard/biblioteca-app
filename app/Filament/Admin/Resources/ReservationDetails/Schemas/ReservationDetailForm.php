@@ -26,6 +26,7 @@ class ReservationDetailForm
                 ->preload()
                 ->required(),
                 Toggle::make('status')
+                    ->label('Estado')
                     ->required(),
             ]);
     }

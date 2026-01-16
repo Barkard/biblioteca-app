@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ dark: (localStorage.getItem('dark') === '1') }" x-bind:class="{ 'dark': dark }" x-init="$watch('dark', value => localStorage.setItem('dark', value ? '1' : '0'))">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -78,6 +78,7 @@ class CopyBookForm
                     }),
 
                 Toggle::make('status')
+                    ->label('Estado')
                     ->default('true')
                     ->required(),
 

@@ -16,18 +16,23 @@ class LoanReturnsTable
         return $table
             ->columns([
                 TextColumn::make('return_date')
+                    ->label('Fecha de Devolución')
                     ->date()
                     ->sortable(),
                 IconColumn::make('status')
+                    ->label('Estado')
                     ->boolean(),
-                TextColumn::make('user_id')
+                TextColumn::make('user.name')
+                    ->label('Usuario')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Creado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Actualizado el')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

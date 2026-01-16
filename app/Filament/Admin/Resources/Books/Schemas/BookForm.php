@@ -115,6 +115,12 @@ class BookForm
                     ->relationship('author', 'name')
                     ->searchable()
                     ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Nombre del Autor'),
+                    ])
                     ->required()
                     ->reactive()
                     ->rules(fn (callable $get, $record = null) => [
@@ -145,6 +151,12 @@ class BookForm
                     ->relationship('publisher', 'name')
                     ->searchable()
                     ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Nombre de la Editorial'),
+                    ])
                     ->required()
                     ->reactive()
                     ->rules(fn (callable $get, $record = null) => [
@@ -170,9 +182,11 @@ class BookForm
                         $checkCombination($livewire, $title, $edition, $authorId, $publisherId);
                     }),
 
-                DatePicker::make('date_published'),
+                DatePicker::make('date_published')
+                    ->label('Fecha de Publicación'),
 
                 Textarea::make('synopsis')
+                    ->label('Sinopsis')
                     ->columnSpanFull(),
 
 
@@ -182,6 +196,15 @@ class BookForm
                     ->relationship('category', 'name')
                     ->searchable()
                     ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Nombre de la Categoría'),
+                        Textarea::make('description')
+                            ->label('Descripción')
+                            ->columnSpanFull(),
+                    ])
                     ->required(),
             ]);
     }

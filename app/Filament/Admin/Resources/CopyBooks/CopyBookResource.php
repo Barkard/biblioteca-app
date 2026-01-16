@@ -20,7 +20,11 @@ class CopyBookResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'CopyBook';
+    protected static ?string $modelLabel = 'Ejemplar';
+    protected static ?string $pluralModelLabel = 'Ejemplares';
+    protected static ?string $navigationLabel = 'Ejemplares';
+
+    protected static ?string $recordTitleAttribute = 'number';
 
     public static function form(Schema $schema): Schema
     {
