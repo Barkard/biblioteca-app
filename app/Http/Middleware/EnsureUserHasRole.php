@@ -12,10 +12,10 @@ class EnsureUserHasRole
     public function handle(Request $request, Closure $next, string $panel): Response
     {
         $user = auth()->user();
-
+        // Solo permitimos el panel admin y sólo para usuarios con rol 'Admin'.
         if (! $user) {
-            // No autenticado: llevar al login del panel solicitado
-            return redirect(url("/{$panel}/login"));
+            // Redirigir al login del panel admin
+            return redirect(url('/admin/login'));
         }
 
         // Asegura que la relación role esté cargada
@@ -24,31 +24,16 @@ class EnsureUserHasRole
 
         Log::info("EnsureUserHasRole: usuario {$user->id} con rol '{$roleName}' accediendo al panel '{$panel}'");
 
-        // Redirección automática según rol:
-        if (strcasecmp($roleName ?? '', 'Admin') === 0 && $panel !== 'admin') {
-            return redirect(url('/admin'));
-        }
-
-        if (strcasecmp($roleName ?? '', 'Reader') === 0 && $panel !== 'global' && $panel !== 'panel') {
-            // redirige al panel global (ruta /panel). acepta 'global' o 'panel' según tu provider.
-            return redirect(url('/global'));
-        }
-
-        // Comprobación de roles permitidos para el panel (ajusta según políticas)
-        $allowedRoles = $this->getAllowedRoles($panel);
-        if (! in_array($roleName, $allowedRoles, true)) {
+        // Si el usuario no es Admin, no tiene acceso al panel admin
+        if (strcasecmp($roleName ?? '', 'Admin') !== 0) {
             abort(403, 'No tienes acceso a este panel.');
         }
 
-        return $next($request);
-    }
+        // Si se accedió con un panel distinto a 'admin', redirigimos al admin
+        if (strtolower($panel) !== 'admin') {
+            return redirect(url('/admin'));
+        }
 
-    private function getAllowedRoles(string $panel): array
-    {
-        return match (strtolower($panel)) {
-            'admin' => ['Admin', 'Staff'],
-            'global', 'panel' => ['Reader', 'Admin'], // permite también Admin acceder al panel global si lo deseas
-            default => [],
-        };
+        return $next($request);
     }
 }
