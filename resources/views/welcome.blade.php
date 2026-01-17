@@ -17,6 +17,11 @@
         html { transition: background-color .2s, color .2s; }
     </style>
 </head>
+@php
+    $login = function_exists('filament') ? filament()->getLoginUrl() : url('/global/login');
+    $register = url('/global/register');
+@endphp
+
 <body class="bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col">
     <header class="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
         <div class="flex items-center gap-4">
@@ -46,13 +51,9 @@
             </button>
 
             @auth
-                <a href="{{ url('/dashboard') }}" class="px-4 py-1.5 rounded-md text-sm bg-slate-100 dark:bg-slate-800 border border-transparent hover:opacity-90">Dashboard</a>
+                <a href="{{ url('/admin') }}" class="px-4 py-1.5 rounded-md text-sm bg-slate-100 dark:bg-slate-800 border border-transparent hover:opacity-90">Dashboard</a>
             @else
-                @php
-                    $login = function_exists('filament') ? filament()->getLoginUrl() : url('/global/login');
-                    $register = url('/global/register');
-                @endphp
-
+                
                 <a href="{{ $login }}" class="px-4 py-1.5 rounded-md text-sm bg-amber-500 text-white hover:opacity-95">Iniciar sesión</a>
                 <a href="{{ $register }}" class="px-3 py-1.5 rounded-md text-sm border border-slate-200 dark:border-slate-700">Crear cuenta</a>
             @endauth

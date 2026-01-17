@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('loan_details', function (Blueprint $table) {
             $table->id();
-            $table->boolean('status')->default(true);
             $table->date('return_date')->nullable();
 
             $table->foreignId('copy_book_id')->constrained('copy_books')->onDelete('restrict');
