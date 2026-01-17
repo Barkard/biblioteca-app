@@ -25,7 +25,7 @@ class BookForm
             }
 
             $query = Book::query()
-                ->where('title', $title)
+                ->whereRaw('LOWER(title) = ?', [strtolower($title)])
                 ->where('Edition', $edition)
                 ->where('author_id', $authorId)
                 ->where('publisher_id', $publisherId);
@@ -56,22 +56,53 @@ class BookForm
             return $exists;
         };
 
+        $validateUnique = function (callable $get, $record = null) {
+            return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                $title = $get('title');
+                $edition = $get('Edition');
+                $authorId = $get('author_id');
+                $publisherId = $get('publisher_id');
+
+                if (! $title || ! $edition || ! $authorId || ! $publisherId) {
+                    return;
+                }
+
+                $query = Book::query()
+                    ->whereRaw('LOWER(title) = ?', [strtolower($title)])
+                    ->where('Edition', $edition)
+                    ->where('author_id', $authorId)
+                    ->where('publisher_id', $publisherId);
+
+                if ($record && $record->id) {
+                    $query->where('id', '<>', $record->id);
+                }
+
+                if ($query->exists()) {
+                    $fail('Ya existe un libro con este título (mismo nombre, edición, autor y editorial).');
+                }
+            };
+        };
+
+        $runCombinationCheck = function ($livewire) use ($checkCombination) {
+            $data = method_exists($livewire, 'getState') ? $livewire->getState() : (property_exists($livewire, 'data') ? $livewire->data : []);
+
+            $title = $data['title'] ?? ($livewire->record->title ?? null);
+            $edition = $data['Edition'] ?? ($livewire->record->Edition ?? null);
+            $authorId = $data['author_id'] ?? ($livewire->record->author_id ?? null);
+            $publisherId = $data['publisher_id'] ?? ($livewire->record->publisher_id ?? null);
+
+            $checkCombination($livewire, $title, $edition, $authorId, $publisherId);
+        };
+
         return $schema
             ->components([
                 TextInput::make('title')
                     ->label('Título')
                     ->required()
-                    ->reactive()
+                    ->live(onBlur: true)
                     ->rules(fn (callable $get, $record = null) => [
                         'required',
-                        Rule::unique('books', 'title')
-                            ->where(fn ($q) => $q->where('Edition', $get('Edition') ?? ''))
-                            ->where(fn ($q) => $q->where('author_id', $get('author_id') ?? ''))
-                            ->where(fn ($q) => $q->where('publisher_id', $get('publisher_id') ?? ''))
-                            ->ignore($record?->id ?? null),
-                    ])
-                    ->validationMessages([
-                        'unique' => 'Ya existe un libro con este título, edición, autor y editorial.',
+                        $validateUnique($get, $record),
                     ])
                     ->afterStateUpdated(function (TextInput $component, $state) use ($checkCombination) {
                         $livewire = $component->getLivewire();
@@ -87,17 +118,10 @@ class BookForm
                 TextInput::make('Edition')
                     ->label('Edición')
                     ->required()
-                    ->reactive()
+                    ->live(onBlur: true)
                     ->rules(fn (callable $get, $record = null) => [
                         'required',
-                        Rule::unique('books', 'Edition')
-                            ->where(fn ($q) => $q->where('title', $get('title') ?? ''))
-                            ->where(fn ($q) => $q->where('author_id', $get('author_id') ?? ''))
-                            ->where(fn ($q) => $q->where('publisher_id', $get('publisher_id') ?? ''))
-                            ->ignore($record?->id ?? null),
-                    ])
-                    ->validationMessages([
-                        'unique' => 'Ya existe un libro con este título, edición, autor y editorial.',
+                        $validateUnique($get, $record),
                     ])
                     ->afterStateUpdated(function (TextInput $component, $state) use ($checkCombination) {
                         $livewire = $component->getLivewire();
@@ -119,21 +143,32 @@ class BookForm
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255)
-                            ->label('Nombre del Autor'),
+                            ->label('Nombre del Autor')
+                            ->rules([
+                                fn () => function (string $attribute, $value, \Closure $fail) {
+                                    if (\App\Models\Author::whereRaw('LOWER(name) = ?', [strtolower($value)])->exists()) {
+                                        $fail('Ya existe un autor con este nombre.');
+                                    }
+                                },
+                            ]),
                     ])
+                    ->createOptionAction(function ($action) use ($runCombinationCheck) {
+                        return $action
+                            ->after(function ($livewire) use ($runCombinationCheck) {
+                                $runCombinationCheck($livewire);
+                            })
+                            ->modalCancelAction(fn ($action) => $action->action(function ($livewire) use ($runCombinationCheck) {
+                                $runCombinationCheck($livewire);
+                            }));
+                    })
                     ->required()
-                    ->reactive()
+                    ->live(onBlur: true)
                     ->rules(fn (callable $get, $record = null) => [
                         'required',
-                        Rule::unique('books', 'author_id')
-                            ->where(fn ($q) => $q->where('title', $get('title') ?? ''))
-                            ->where(fn ($q) => $q->where('Edition', $get('Edition') ?? ''))
-                            ->where(fn ($q) => $q->where('publisher_id', $get('publisher_id') ?? ''))
-                            ->ignore($record?->id ?? null),
+                        $validateUnique($get, $record),
                     ])
                     ->validationMessages([
                         'required' => 'El autor es obligatorio.',
-                        'unique' => 'Ya existe un libro con este título, edición, autor y editorial.',
                     ])
                     ->afterStateUpdated(function ($component, $state) use ($checkCombination) {
                         $livewire = $component->getLivewire();
@@ -155,21 +190,32 @@ class BookForm
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255)
-                            ->label('Nombre de la Editorial'),
+                            ->label('Nombre de la Editorial')
+                            ->rules([
+                                fn () => function (string $attribute, $value, \Closure $fail) {
+                                    if (\App\Models\Publisher::whereRaw('LOWER(name) = ?', [strtolower($value)])->exists()) {
+                                        $fail('Ya existe una editorial con este nombre.');
+                                    }
+                                },
+                            ]),
                     ])
+                    ->createOptionAction(function ($action) use ($runCombinationCheck) {
+                        return $action
+                            ->after(function ($livewire) use ($runCombinationCheck) {
+                                $runCombinationCheck($livewire);
+                            })
+                            ->modalCancelAction(fn ($action) => $action->action(function ($livewire) use ($runCombinationCheck) {
+                                $runCombinationCheck($livewire);
+                            }));
+                    })
                     ->required()
-                    ->reactive()
+                    ->live(onBlur: true)
                     ->rules(fn (callable $get, $record = null) => [
                         'required',
-                        Rule::unique('books', 'publisher_id')
-                            ->where(fn ($q) => $q->where('title', $get('title') ?? ''))
-                            ->where(fn ($q) => $q->where('Edition', $get('Edition') ?? ''))
-                            ->where(fn ($q) => $q->where('author_id', $get('author_id') ?? ''))
-                            ->ignore($record?->id ?? null),
+                        $validateUnique($get, $record),
                     ])
                     ->validationMessages([
                         'required' => 'La editorial es obligatoria.',
-                        'unique' => 'Ya existe un libro con este título, edición, autor y editorial.',
                     ])
                     ->afterStateUpdated(function ($component, $state) use ($checkCombination) {
                         $livewire = $component->getLivewire();
@@ -200,11 +246,27 @@ class BookForm
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255)
-                            ->label('Nombre de la Categoría'),
+                            ->label('Nombre de la Categoría')
+                            ->rules([
+                                fn () => function (string $attribute, $value, \Closure $fail) {
+                                    if (\App\Models\Category::whereRaw('LOWER(name) = ?', [strtolower($value)])->exists()) {
+                                        $fail('Ya existe una categoría con este nombre.');
+                                    }
+                                },
+                            ]),
                         Textarea::make('description')
                             ->label('Descripción')
                             ->columnSpanFull(),
                     ])
+                    ->createOptionAction(function ($action) use ($runCombinationCheck) {
+                        return $action
+                            ->after(function ($livewire) use ($runCombinationCheck) {
+                                $runCombinationCheck($livewire);
+                            })
+                            ->modalCancelAction(fn ($action) => $action->action(function ($livewire) use ($runCombinationCheck) {
+                                $runCombinationCheck($livewire);
+                            }));
+                    })
                     ->required(),
             ]);
     }
