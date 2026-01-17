@@ -170,6 +170,7 @@ class BookForm
                     ->validationMessages([
                         'required' => 'El autor es obligatorio.',
                     ])
+                    
                     ->afterStateUpdated(function ($component, $state) use ($checkCombination) {
                         $livewire = $component->getLivewire();
                         $data = method_exists($livewire, 'getState') ? $livewire->getState() : (property_exists($livewire, 'data') ? $livewire->data : []);
