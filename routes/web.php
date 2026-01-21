@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginReaderController;
 
 Route::get('/', function () {
-    return view('welcome');
+    //panel admin login
+    return redirect('admin/login');
 });
 
 // AJAX login endpoint for reader users

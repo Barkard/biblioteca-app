@@ -37,7 +37,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::HEAD_END,
-                fn (): string => '<style>
+                fn (): string => <<<'HTML'
+                <style>
                     /* Light Mode */
                     html:not(.dark) body.fi-body {
                         background-color: #fff7d6ff !important;
@@ -243,8 +244,28 @@ class AdminPanelProvider extends PanelProvider
                         border-radius-right: 15px !important;
                     }
 
+                    /* Login Background Image */
+                    .fi-simple-layout {
+                        background: url('/images/login-bg.png') no-repeat center center fixed !important;
+                        background-size: cover !important;
+                    }
 
-                </style>'
+                    /* Login Form Container Styling */
+                    .fi-simple-main-ctn {
+                        background-color: rgba(24, 20, 21, 0.8) !important; /* Semi-transparent dark background */
+                        backdrop-filter: blur(10px);
+                        border-radius: 20px;
+                        padding: 2rem;
+                    }
+
+                    /* Ensure text in the login container is white/legible */
+                    .fi-simple-main-ctn :is(h1, p, label, span, a, svg) {
+                        color: #ffffff !important;
+                    }
+
+
+                </style>
+HTML
             )
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
