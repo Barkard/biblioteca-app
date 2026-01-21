@@ -42,6 +42,8 @@ class LoanReturnsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                \Filament\Actions\ViewAction::make()
+                    ->modalHeading('Detalle del Préstamo'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

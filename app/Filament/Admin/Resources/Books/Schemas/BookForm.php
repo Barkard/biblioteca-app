@@ -228,6 +228,12 @@ class BookForm
                         $checkCombination($livewire, $title, $edition, $authorId, $publisherId);
                     }),
 
+                \Filament\Forms\Components\FileUpload::make('cover')
+                    ->label('Portada')
+                    ->image()
+                    ->directory('books/covers')
+                    ,
+
                 DatePicker::make('date_published')
                     ->label('Fecha de Publicación'),
 

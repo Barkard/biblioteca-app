@@ -11,6 +11,8 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
+
+
 class CopyBookForm
 {
     public static function configure(Schema $schema): Schema
@@ -77,27 +79,72 @@ class CopyBookForm
                         }
                     }),
 
-                Toggle::make('status')
-                    ->label('Estado')
-                    ->default('true')
+                \Filament\Forms\Components\Hidden::make('book_id')
                     ->required(),
 
-                Select::make('book_id')
-                    ->label('Libro')
-                    ->options(function () {
-                        return Book::with('author')
-                            ->orderBy('title')
-                            ->get()
-                            ->mapWithKeys(function (Book $book) {
-                                $author = $book->author?->name ?? '—';
-                                $publisher = $book->publisher?->name ?? '—';
-                                return [$book->id => $book->title . ' — ' . $author . ' — ' . $publisher.'('. $book->Edition .')'];
-                            })
-                            ->toArray();
+                \Filament\Forms\Components\TextInput::make('book_overview')
+                    ->label('Libro Seleccionado')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->formatStateUsing(function ($get) {
+                        $bookId = $get('book_id');
+                        if (!$bookId) return 'Ningún libro seleccionado';
+                        $book = \App\Models\Book::with('author')->find($bookId);
+                        return $book ? "{$book->title} - {$book->author->name}" : 'Ningún libro seleccionado';
                     })
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+                    ->suffixAction(
+                        \Filament\Actions\Action::make('select_book')
+                            ->label('Buscar Libro')
+                            ->icon('heroicon-o-magnifying-glass')
+                            ->modalHeading('Seleccionar Libro')
+                            ->form([
+                                Select::make('temp_book_id')
+                                    ->label('Buscar Libro')
+                                    ->options(function () {
+                                        return Book::with('author')
+                                            ->orderBy('title')
+                                            ->get()
+                                            ->mapWithKeys(function (Book $book) {
+                                                return [$book->id => $book->title . ' — ' . ($book->author->name ?? 'Unknown')];
+                                            })
+                                            ->toArray();
+                                    })
+                                    ->searchable()
+                                    ->required()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        $book = Book::find($state);
+                                        if ($book) {
+                                            $set('temp_cover', $book->cover);
+                                        }
+                                    }),
+                                \Filament\Forms\Components\FileUpload::make('temp_cover')
+                                    ->label('Portada')
+                                    ->image()
+                                    ->directory('books/covers')
+                                    ->disabled()
+                                    ->dehydrated(false)
+                            ])
+                            ->action(function ($data, $set) {
+                                $set('book_id', $data['temp_book_id']);
+                                $book = \App\Models\Book::find($data['temp_book_id']);
+                                if ($book) {
+                                    $set('cover_display', $book->cover);
+                                }
+                            })
+                    ),
+
+                \Filament\Forms\Components\FileUpload::make('cover_display')
+                    ->label('Portada')
+                    ->image()
+                    ->directory('books/covers')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->formatStateUsing(function ($get) {
+                         $bookId = $get('book_id');
+                         if (!$bookId) return null;
+                         return \App\Models\Book::find($bookId)?->cover;
+                    }),
             ]);
     }
 }
