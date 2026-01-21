@@ -3,10 +3,12 @@
 namespace App\Filament\Admin\Resources\LoanReturns\Schemas;
 
 use App\Models\User;
+use App\Models\CopyBook;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Schema;
 
 class LoanReturnForm
@@ -34,6 +36,26 @@ class LoanReturnForm
                     ->searchable()
                     ->preload()
                     ->required(),
+                Repeater::make('loanDetails')
+                    ->relationship()
+                    ->schema([
+                        Select::make('copy_book_id')
+                            ->label('Libro / Ejemplar')
+                            ->options(function () {
+                                return CopyBook::with('book')
+                                    ->get()
+                                    ->mapWithKeys(function ($copy) {
+                                        return [$copy->id => ($copy->book->title ?? 'Sin título') . ' - ' . $copy->cota];
+                                    });
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+                    ])
+                    ->addActionLabel('Añadir otro ejemplar')
+                    ->defaultItems(1)
+                    ->columns(1),
             ]);
     }
 }
