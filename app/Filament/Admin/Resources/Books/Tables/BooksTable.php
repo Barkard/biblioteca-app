@@ -8,6 +8,8 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\ImageColumn;
+
 
 class BooksTable
 {
@@ -15,6 +17,10 @@ class BooksTable
     {
         return $table
             ->columns([
+                ImageColumn::make('cover')
+                    ->label('Portada')
+                    ->width(50)
+                    ->height(80),
                 TextColumn::make('title')
                     ->label('Título')
                     ->searchable(),

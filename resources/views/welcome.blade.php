@@ -53,7 +53,7 @@
             @auth
                 <a href="{{ url('/admin') }}" class="px-4 py-1.5 rounded-md text-sm bg-slate-100 dark:bg-slate-800 border border-transparent hover:opacity-90">Dashboard</a>
             @else
-                
+
                 <a href="{{ $login }}" class="px-4 py-1.5 rounded-md text-sm bg-amber-500 text-white hover:opacity-95">Iniciar sesión</a>
                 <a href="{{ $register }}" class="px-3 py-1.5 rounded-md text-sm border border-slate-200 dark:border-slate-700">Crear cuenta</a>
             @endauth

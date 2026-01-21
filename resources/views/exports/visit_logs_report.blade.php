@@ -8,13 +8,14 @@
         <tr>
             <th colspan="8" style="text-align: center; font-weight: bold; font-size: 16px;">10.- VISITAS DE USUARIOS</th>
         </tr>
-        <tr>
-            <th colspan="8" style="text-align: center; font-weight: bold; font-size: 18px;">{{ $grandTotal }}</th>
-        </tr>
+
         <tr>
             <th colspan="8" style="text-align: center;">Reporte del {{ $dateFrom }} al {{ $dateTo }}</th>
         </tr>
         
+        <tr>
+            <th colspan="8" style="text-align: center; font-weight: bold; font-size: 18px;">{{ $grandTotal }}</th>
+        </tr>
 
         <!-- Totales Por Genero y Rango (Debajo de los totales de edad) -->
          <tr>
@@ -30,6 +31,10 @@
              <!-- 25+ -->
             <th style="text-align: center; font-weight: bold;">{{ $counts['25+']['male'] }}</th>
             <th style="text-align: center; font-weight: bold;">{{ $counts['25+']['female'] }}</th>
+        </tr>
+        {{-- titulo Edad --}}
+        <tr>
+            <th colspan="8" style="text-align: center; font-weight: bold;">EDAD</th>
         </tr>
 
         <tr>

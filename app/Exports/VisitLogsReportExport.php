@@ -6,8 +6,11 @@ use App\Models\VisitLog;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class VisitLogsReportExport implements FromView
+class VisitLogsReportExport implements FromView, WithStyles
 {
     protected $dateFrom;
     protected $dateTo;
@@ -16,6 +19,14 @@ class VisitLogsReportExport implements FromView
     {
         $this->dateFrom = Carbon::parse($dateFrom)->startOfDay();
         $this->dateTo = Carbon::parse($dateTo)->endOfDay();
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle($sheet->calculateWorksheetDimension())
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
     }
 
     public function view(): View

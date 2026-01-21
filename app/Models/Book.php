@@ -15,6 +15,7 @@ class Book extends Model
         'Edition',
         'date_published',
         'synopsis',
+        'cover',
     ];
     public function author()
     {
