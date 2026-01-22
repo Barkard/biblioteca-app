@@ -49,6 +49,17 @@ class UserForm
                 TextInput::make('id_user')
                     ->label('Cédula / RIF')
                     ->required(),
+                Select::make('country_code')
+                    ->label('Código de País')
+                    ->options([
+                        '+58' => '+58 Venezuela',
+                        '+57' => '+57 Colombia',
+                    ])
+                    ->default('+58')
+                    ->selectablePlaceholder(false),
+                TextInput::make('phone')
+                    ->label('Teléfono')
+                    ->tel(),
                 Toggle::make('status')
                     ->label('Estado')
                     ->required(),

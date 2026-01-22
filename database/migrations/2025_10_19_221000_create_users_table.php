@@ -22,6 +22,8 @@ return new class extends Migration
             $table->date('birthdate')->nullable();
             $table->integer('id_user')->unique();
             $table->string('nationality', 1);
+            $table->string('country_code', 5)->nullable();
+            $table->string('phone')->nullable();
             $table->boolean('status')->default(true);
             $table->string('password');
             $table->rememberToken();

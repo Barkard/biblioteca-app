@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+.wwebjs_auth/
+whatsapp-gateway/node_modules/
+whatsapp-gateway/.wwebjs_auth/
