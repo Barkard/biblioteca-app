@@ -21,4 +21,16 @@ class CopyBook extends Model
     {
         return $this->hasMany(LoanDetail::class);
     }
+
+    public function nextAvailableDate()
+    {
+        if ($this->status) {
+            return null;
+        }
+
+        return $this->loanDetails()
+            ->latest('return_date')
+            ->first()
+            ?->return_date;
+    }
 }

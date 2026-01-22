@@ -33,12 +33,13 @@ class AdminPanelProvider extends PanelProvider
             ->login(\App\Filament\Auth\Pages\Login::class)
             ->profile(\App\Filament\Auth\Pages\EditProfile::class) // ← OPCIONAL: perfil de usuario
             ->colors([
-                'primary' => '#800020',
+                'primary' => '#0ce23aff',
             ])
             ->renderHook(
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 fn (): string => <<<'HTML'
                 <style>
+
                     /* Light Mode */
                     html:not(.dark) body.fi-body {
                         background-color: #fff7d6ff !important;
@@ -234,7 +235,7 @@ class AdminPanelProvider extends PanelProvider
                         border-radius-left: 15px !important;
                         }
                     html:not(.dark) .fi-select-input {
-                        background-color: #80664aff !important;
+                        background-color: #80664a !important;
                         color: #ffffffff !important;
                         border-radius-right: 15px !important;
                     }
@@ -242,6 +243,70 @@ class AdminPanelProvider extends PanelProvider
                         background-color: #0e0c0cff !important;
                         color: #ffffffff !important;
                         border-radius-right: 15px !important;
+                    }
+
+                    /* Global Form Fields Styling */
+                    html:not(.dark) .fi-input-wrp {
+                        background-color: #80664a !important;
+                        color: #ffffff !important;
+                    }
+                    html.dark .fi-input-wrp {
+                        background-color: #0e0c0cff !important;
+                        color: #ffffff !important;
+                    }
+
+                    /* Ensure actual input/select elements have white text */
+                    .fi-input, .fi-select-input {
+                        color: #ffffff !important;
+                    }
+
+                    /* Repeater Add Buttons */
+                    html:not(.dark) :is(.fi-fo-repeater-add, .fi-fo-repeater-add-between-items) button {
+                        background-color: #80664a !important;
+                    }
+                    html.dark :is(.fi-fo-repeater-add, .fi-fo-repeater-add-between-items) button {
+                        background-color: #0e0c0cff !important;
+                    }
+
+                    /* File Upload (Portada) */
+                    html:not(.dark) .fi-fo-file-upload .filepond--panel-root {
+                        background-color: #80664a !important;
+                    }
+                    html.dark .fi-fo-file-upload .filepond--panel-root {
+                        background-color: #0e0c0cff !important;
+                    }
+                    html.dark .fi-fo-file-upload {
+                        background-color: #0e0c0cff !important;
+                        border-radius: 10px !important;
+                    }
+                    html:not(.dark) .fi-fo-file-upload {
+                        background-color: #80664a !important;
+                        border-radius: 10px !important;
+                    }
+
+                    /* Modals Styling */
+                    html:not(.dark) .fi-modal-window {
+                        background-color: #fff7d6 !important;
+                        border-radius: 20px !important;
+                        overflow-y: auto !important;
+                        overflow-x: hidden !important;
+                    }
+                    html.dark .fi-modal-window {
+                        background: linear-gradient(to bottom, #2c2225ff, #0a0a0a) !important; /* Gradient Dark Vinotinto */
+                        background-attachment: fixed !important;
+                        border-radius: 20px !important;
+                        overflow-y: auto !important;
+                        overflow-x: hidden !important;
+                    }
+
+                    /* Ensure all modal sections follow the background */
+                    .fi-modal-header, .fi-modal-content, .fi-modal-footer {
+                        background-color: inherit !important;
+                    }
+
+                    /* Modal Text and Heading visibility */
+                    .fi-modal-heading, .fi-modal-description {
+                        color: #ffffff !important;
                     }
 
                     /* Login Background Image */
@@ -253,8 +318,7 @@ class AdminPanelProvider extends PanelProvider
                     /* Login Form Container Styling */
                     .fi-simple-main-ctn {
                         background-color: rgba(24, 20, 21, 0.8) !important; /* Semi-transparent dark background */
-                        backdrop-filter: blur(10px);
-                        border-radius: 20px;
+                        backdrop-filter: blur(1px);
                         padding: 2rem;
                     }
 
@@ -262,10 +326,126 @@ class AdminPanelProvider extends PanelProvider
                     .fi-simple-main-ctn :is(h1, p, label, span, a, svg) {
                         color: #ffffff !important;
                     }
+                    html:not(.dark) .fi-ta-header.fi-ta-header-adaptive-actions-position {
+                        background-color: #80664aff !important;
+                        border-top-right-radius: 10px !important;
+                        border-top-left-radius: 10px !important;
+                    }
+                    html.dark .fi-ta-header.fi-ta-header-adaptive-actions-position {
+                        background-color: #0e0c0cff !important;
+                        border-top-right-radius: 10px !important;
+                        border-top-left-radius: 10px !important;
+                    }
 
+                    html:not(.dark) .fi-icon-btn.fi-size-md.fi-ac-icon-btn-action.fi-force-enabled{
+                        color: #58442fff;
+                    }
+                    
+                    
+
+                    html.dark .fi-sidebar-item-btn svg {
+                        color: #c0b9b9ff;
+                    }
+
+                    html:not(.dark) .fi-sidebar-item-btn svg {
+                        color: #58442fff;
+                    }
+                    html.dark .fi-icon-btn.fi-size-md.fi-ac-icon-btn-action.fi-force-enabled{
+                        color: #0c0a0aff;
+                    }
+
+                    /* Sidebar Items Styling */
+
+                    .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+                        background-color: #997d5f !important; /* Visible background when active (Light) */
+                    }
+                    html.dark .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+                        background-color: #181415ff !important; /* Visible background when active (Dark) */
+                    }
+
+                    /* Sidebar Hover */
+                    .fi-sidebar-item-btn:hover {
+                         background-color: #997d5f !important; /* Subtle hover effect (Light) */
+                    }
+                    html.dark .fi-sidebar-item-btn:hover {
+                         background-color: #181415ff !important; /* Subtle hover effect (Dark) */
+                    }
+
+                    /* Neutralize broad hover rules that might affect layout */
+                    .fi-sidebar-item:hover,
+                    .fi-sidebar-item-button:hover {
+                         background-color: transparent !important;
+                    }
+
+                    /* LOGIN DISEÑO */
+                    html:not(.dark) .fi-simple-main.fi-width-lg {
+                        background-color: #e2c9a7ff !important;
+                        border-radius: 20px !important;
+                    }
+                    html.dark .fi-simple-main.fi-width-lg {
+                        background-color: #2c2225ff !important;
+                        border-radius: 20px !important;
+                    }
+                    /*color #80664a del span*/
+                    .fi-fo-field-label-content span {
+                        color: #80664a !important;
+                    }
+                    .fi-simple-header h1 {
+                        color: #80664a !important;
+                    }
+                    html.dark .fi-simple-header h1 {
+                        color: #c0b9b9ff !important;
+                    }
+                    
+                    html:not(.dark) .fi-fo-field-label-content {
+                        color: #58442fff !important;
+                    }
+                    html.dark .fi-fo-field-label-content {
+                        color: #c0b9b9ff !important;
+                    }
+
+                    /* Login Inputs and Password Toggle */
+                    html:not(.dark) .fi-simple-main-ctn .fi-input-wrp {
+                        background-color: #80664aff !important;
+                    }
+                    html.dark .fi-simple-main-ctn .fi-input-wrp {
+                        background-color: #0e0c0cff !important;
+                    }
+                    html:not(.dark) .fi-simple-main-ctn .fi-input-wrp-actions button {
+                        background-color: #80664aff !important;
+                    }
+                    html.dark .fi-simple-main-ctn .fi-input-wrp-actions button {
+                        background-color: #0e0c0cff !important;
+                    }
+
+                    html:not(.dark) .fi-dropdown-list {
+                        background-color: #997d5f !important;
+                    }
+                    html.dark .fi-dropdown-list {
+                        background-color: #181415 !important;
+                    }
+
+                    /* Hover Theme Switcher */
+                    html:not(.dark) .fi-theme-switcher-btn:hover {
+                        background-color: #80664aff !important;
+                    }
+                    html.dark .fi-theme-switcher-btn:hover {
+                        background-color: #0e0c0cff !important;
+                    }
+
+                    html:not(.dark) .fi-theme-switcher-btn.fi-active {
+                        background-color: #80664aff !important;
+                    }
+                    html.dark .fi-theme-switcher-btn.fi-active {
+                        background-color: #0e0c0cff !important;
+                    }
 
                 </style>
 HTML
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-center mb-4"><x-filament-panels::theme-switcher /></div>'),
             )
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
