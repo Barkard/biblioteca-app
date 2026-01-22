@@ -9,12 +9,18 @@ class ReservationDetail extends Model
     protected $fillable = [
         'status',
         'book_id',
+        'copy_book_id',
         'reservation_id',
     ];
 
     public function book()
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function copyBook()
+    {
+        return $this->belongsTo(CopyBook::class);
     }
 
     public function reservation()
