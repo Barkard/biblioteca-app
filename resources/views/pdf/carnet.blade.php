@@ -142,12 +142,7 @@
 
                         <div style="margin-bottom: 2pt;">
                             <div class="label">CÉDULA DE IDENTIDAD</div>
-                            <div class="value">{{ $user->nationality }}-{{ number_format($user->id_user, 0, '.', '.') }}</div>
-                        </div>
-
-                        <div style="margin-bottom: 2pt;">
-                            <div class="label">ROL / CARGO</div>
-                            <div class="value">{{ strtoupper($user->role->name ?? 'USUARIO') }}</div>
+                            <div class="value">{{ $user->nationality }}-{{ $user->id_user }}</div>
                         </div>
 
                         <!-- Dates -->
