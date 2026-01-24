@@ -17,9 +17,6 @@ class ReservationForm
     {
         return $schema
             ->components([
-                DatePicker::make('reservation_date')
-                    ->label('Fecha de Reserva')
-                    ->required(),
                 Select::make('user_id')
                     ->label('Usuario')
                     ->options(function () {
@@ -37,6 +34,7 @@ class ReservationForm
 
                 \Filament\Forms\Components\Repeater::make('reservationDetails')
                     ->relationship('reservationDetails')
+                    ->addAction(fn ($action) => $action->after(fn ($livewire) => $livewire->resetValidation()))
                     ->schema([
                         Select::make('book_id')
                             ->label('Libro')
@@ -63,24 +61,81 @@ class ReservationForm
                                 return $book ? "{$book->title} ({$book->available_copies_count} disponibles)" : null;
                             })
                             ->live()
+                            ->hint(function (Get $get) {
+                                $bookId = $get('book_id');
+                                if (!$bookId) return null;
+
+                                $book = \App\Models\Book::find($bookId);
+                                if (!$book) return null;
+
+                                $availableNow = $book->copyBooks()->where('status', true)->exists();
+                                if ($availableNow) {
+                                    return new \Illuminate\Support\HtmlString("<span style='color: #0ce23aff !important; font-weight: bold;'>¡Disponible ahora!</span>");
+                                }
+
+                                // Find valid copies for reservation (within 5 days)
+                                $reservableCopies = $book->copyBooks()
+                                    ->get()
+                                    ->filter(function($copy) {
+                                        $date = $copy->nextAvailableDate();
+                                        if (!$date) return false;
+                                        return \Carbon\Carbon::now()->startOfDay()->diffInDays(\Carbon\Carbon::parse($date)->startOfDay(), false) < 5;
+                                    })
+                                    ->sortBy(fn($copy) => $copy->nextAvailableDate());
+
+                                if ($reservableCopies->isNotEmpty()) {
+                                    $earliestCopy = $reservableCopies->first();
+                                    $date = $earliestCopy->nextAvailableDate();
+                                    $days = \Carbon\Carbon::now()->startOfDay()->diffInDays(\Carbon\Carbon::parse($date)->startOfDay(), false);
+                                    return new \Illuminate\Support\HtmlString("<span style='color: #f7d02c !important; font-weight: bold;'>Ocupado. Reservable (vuelve en aprox. {$days} días)</span>");
+                                }
+
+                                // Check if there are any copies at all that will be available later
+                                $earliestAny = $book->copyBooks()
+                                    ->get()
+                                    ->sortBy(fn($copy) => $copy->nextAvailableDate())
+                                    ->first();
+
+                                if ($earliestAny) {
+                                    $date = $earliestAny->nextAvailableDate();
+                                    $days = \Carbon\Carbon::now()->startOfDay()->diffInDays(\Carbon\Carbon::parse($date)->startOfDay(), false);
+                                    return new \Illuminate\Support\HtmlString("<span style='color: #ef4444 !important; font-weight: bold;'>Ocupado. NO reservable (Disponible en {$days} días)</span>");
+                                }
+
+                                return null;
+                            })
                             ->afterStateUpdated(fn (Set $set) => $set('copy_book_id', null))
                             ->required(),
                         Select::make('copy_book_id')
                             ->label('Ejemplar (Cota)')
-                            ->options(function (Get $get) {
+                            ->options(function (Get $get, Select $component) {
                                 $bookId = $get('book_id');
                                 if (! $bookId) {
                                     return [];
                                 }
 
+                                // Get all selected copy IDs in the repeater
+                                $selectedCopies = collect($get('../../reservationDetails'))
+                                    ->pluck('copy_book_id')
+                                    ->filter(fn ($id) => $id && (string)$id !== (string)$component->getState())
+                                    ->values();
+
                                 return \App\Models\CopyBook::query()
                                     ->where('book_id', $bookId)
+                                    ->whereNotIn('id', $selectedCopies)
                                     ->get()
                                     ->mapWithKeys(function ($copy) {
                                         $label = $copy->cota;
-                                        if (! $copy->status) {
+                                        if ($copy->status) {
+                                            $label .= " (Disponible)";
+                                        } else {
                                             $date = $copy->nextAvailableDate();
-                                            $label .= " (Ocupado" . ($date ? " hasta {$date}" : "") . ")";
+                                            if ($date) {
+                                                $days = \Carbon\Carbon::now()->startOfDay()->diffInDays(\Carbon\Carbon::parse($date)->startOfDay(), false);
+                                                $label .= " (Ocupado - Faltan {$days} días)";
+                                            } else {
+                                                $label .= " (Ocupado)";
+                                            }
                                         }
                                         return [$copy->id => $label];
                                     })
@@ -94,23 +149,23 @@ class ReservationForm
                                 if (! $copyId) return null;
 
                                 $copy = \App\Models\CopyBook::find($copyId);
-                                if (! $copy || $copy->status) return null;
+                                if (! $copy) return null;
+
+                                if ($copy->status) {
+                                    return new \Illuminate\Support\HtmlString("<span style='color: #0ce23aff !important; font-weight: bold;'>¡Disponible ahora!</span>");
+                                }
 
                                 $date = $copy->nextAvailableDate();
                                 if (! $date) return null;
 
                                 $carbonDate = \Carbon\Carbon::parse($date);
-                                $days = \Carbon\Carbon::now()->diffInDays($carbonDate, false);
+                                $days = \Carbon\Carbon::now()->startOfDay()->diffInDays($carbonDate->startOfDay(), false);
 
                                 if ($days >= 5) {
-                                    return new \Illuminate\Support\HtmlString("<span style='color: red; font-weight: bold;'>Faltan {$days} días para que el libro esté disponible</span>");
+                                    return new \Illuminate\Support\HtmlString("<span style='color: #ef4444 !important; font-weight: bold;'>NO RESERVABLE: Faltan {$days} días</span>");
                                 }
 
-                                if ($days >= 0) {
-                                    return new \Illuminate\Support\HtmlString("<span style='color: yellow; font-weight: bold;'>Faltan {$days} días para que el libro esté disponible</span> (Se marcará como <span style='color: orange;'>PENDIENTE</span>)");
-                                }
-
-                                return null;
+                                return new \Illuminate\Support\HtmlString("<span style='color: #f7d02c !important; font-weight: bold;'>RESERVABLE: Faltan {$days} días</span> (Reserva PENDIENTE)");
                             })
                             ->rules([
                                 function (Get $get) {
@@ -124,13 +179,17 @@ class ReservationForm
                                         if (!$date) return;
 
                                         $carbonDate = \Carbon\Carbon::parse($date);
-                                        $days = \Carbon\Carbon::now()->diffInDays($carbonDate, false);
+                                        $days = \Carbon\Carbon::now()->startOfDay()->diffInDays($carbonDate->startOfDay(), false);
 
                                         if ($days >= 5) {
-                                            $fail("Faltan {$days} días para que el libro esté disponible. No se puede realizar la reserva.");
+                                            $fail("este ejemplar no se puede reservar");
                                         }
                                     };
                                 },
+                            ])
+                            ->validationMessages([
+                                'required' => 'Debes seleccionar un ejemplar.',
+                                'in' => 'este ejemplar no se puede reservar',
                             ])
                             ->hidden(fn (Get $get) => ! $get('book_id'))
                             ->required(),

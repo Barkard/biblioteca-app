@@ -27,7 +27,10 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->brandName(config('app.name'))
+            ->brandName('Biblioteca')
+            ->brandLogo(asset('images/world-book-day.svg'))
+            ->darkModeBrandLogo(asset('images/world-book-day-dark.svg'))
+            ->brandLogoHeight('3rem')
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Auth\Pages\Login::class)
@@ -387,8 +390,12 @@ class AdminPanelProvider extends PanelProvider
                         border-radius: 20px !important;
                     }
                     /*color #80664a del span*/
-                    .fi-fo-field-label-content span {
+                    .fi-fo-field-label-content {
                         color: #80664a !important;
+                    }
+                    /* Evitar que el color global afecte a los spans internos de validación o hints */
+                    .fi-fo-field-label-content span:not([style]) {
+                        color: inherit !important;
                     }
                     .fi-simple-header h1 {
                         color: #80664a !important;
@@ -438,6 +445,32 @@ class AdminPanelProvider extends PanelProvider
                     }
                     html.dark .fi-theme-switcher-btn.fi-active {
                         background-color: #0e0c0cff !important;
+                    }
+
+                    /* General Form Input Styling (Dark Mode) */
+                    html.dark .fi-fo-text-input .fi-input-wrp,
+                    html.dark .fi-fo-select .fi-input-wrp,
+                    html.dark .fi-fo-date-picker .fi-input-wrp,
+                    html.dark .fi-fo-phone-input .fi-input-wrp,
+                    html.dark .fi-fo-text-area .fi-input-wrp {
+                        background-color: #0e0c0cff !important;
+                        border-color: #3b2c2eff !important;
+                    }
+
+                    html.dark .fi-input-wrp:focus-within {
+                        border-color: #0ce23aff !important;
+                        box-shadow: 0 0 0 1px #0ce23aff !important;
+                    }
+
+                    html.dark input,
+                    html.dark select,
+                    html.dark textarea {
+                        color: #ffffff !important;
+                        background-color: transparent !important;
+                    }
+
+                    html.dark .fi-input-wrp input::placeholder {
+                        color: #71717a !important;
                     }
 
                 </style>

@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateVisitLog extends CreateRecord
 {
     protected static string $resource = VisitLogResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

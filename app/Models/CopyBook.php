@@ -28,9 +28,16 @@ class CopyBook extends Model
             return null;
         }
 
-        return $this->loanDetails()
-            ->latest('return_date')
-            ->first()
-            ?->return_date;
+        $latestDetail = $this->loanDetails()
+            ->with('loanReturn')
+            ->latest()
+            ->first();
+
+        if (!$latestDetail) {
+            return null;
+        }
+
+        // Return the specific return date from detail, or the official one from the loan record
+        return $latestDetail->return_date ?? $latestDetail->loanReturn?->return_date;
     }
 }
