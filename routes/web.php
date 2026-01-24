@@ -11,6 +11,13 @@ Route::get('/', function () {
 // AJAX login endpoint for reader users
 Route::post('/reader/login', [LoginReaderController::class, 'login'])->name('reader.login');
 
+Route::get('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
+
 // Dashboard placeholder route (ensure exists in your app)
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -22,7 +29,7 @@ Route::get('/test-whatsapp', function () {
         ['email' => 'test_wapp@example.com'],
         [
             'name' => 'Kevin',
-            'second_name' => 'Test', 
+            'second_name' => 'Test',
             'last_name' => 'User',
             'second_last_name' => '',
             'role_id' => \App\Models\Role::first()?->id ?? 1,
@@ -50,10 +57,10 @@ Route::get('/test-whatsapp', function () {
 
     // 3. Manually run the job's logic (or the job itself) and capture logs?
     // We'll just run the code here to see output immediately.
-    
+
     $dueDate = \Carbon\Carbon::now()->addDays(2)->format('Y-m-d');
     $loans = \App\Models\LoanReturn::query()
-            ->where('status', true) 
+            ->where('status', true)
             ->whereDate('return_date', $dueDate)
             ->with('user')
             ->get();

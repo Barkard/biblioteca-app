@@ -340,8 +340,8 @@ class AdminPanelProvider extends PanelProvider
                     html:not(.dark) .fi-icon-btn.fi-size-md.fi-ac-icon-btn-action.fi-force-enabled{
                         color: #58442fff;
                     }
-                    
-                    
+
+
 
                     html.dark .fi-sidebar-item-btn svg {
                         color: #c0b9b9ff;
@@ -396,7 +396,7 @@ class AdminPanelProvider extends PanelProvider
                     html.dark .fi-simple-header h1 {
                         color: #c0b9b9ff !important;
                     }
-                    
+
                     html:not(.dark) .fi-fo-field-label-content {
                         color: #58442fff !important;
                     }

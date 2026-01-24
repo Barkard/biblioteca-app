@@ -15,6 +15,18 @@ class UserForm
     {
         return $schema
             ->components([
+                Select::make('nationality')
+                    ->label('Nacionalidad')
+                    ->options([
+                        'V' => 'Venezolano',
+                        'E' => 'Extranjero',
+                        'J' => 'Jurídica',
+                        'G' => 'Gubernamental',
+                    ])
+                    ->required(),
+                TextInput::make('id_user')
+                    ->label('Cédula / RIF')
+                    ->required(),
                 TextInput::make('name')
                     ->label('Primer Nombre')
                     ->required(),
@@ -34,20 +46,8 @@ class UserForm
                 DatePicker::make('birthdate')
                     ->label('Fecha de Nacimiento'),
                 TextInput::make('password')
-                ->label('Contraseña')
-                ->password()
-                ->required(),
-                Select::make('nationality')
-                ->label('Nacionalidad')
-                ->options([
-                    'V' => 'Venezolano',
-                    'E' => 'Extranjero',
-                    'J' => 'Jurídica',
-                    'G' => 'Gubernamental',
-                    ])
-                    ->required(),
-                TextInput::make('id_user')
-                    ->label('Cédula / RIF')
+                    ->label('Contraseña')
+                    ->password()
                     ->required(),
                 Select::make('country_code')
                     ->label('Código de País')
@@ -60,6 +60,10 @@ class UserForm
                 TextInput::make('phone')
                     ->label('Teléfono')
                     ->tel(),
+                Select::make('role_id')
+                    ->label('Role')
+                    ->relationship('role', 'name')
+                    ->required(),
                 Toggle::make('status')
                     ->label('Estado')
                     ->required(),

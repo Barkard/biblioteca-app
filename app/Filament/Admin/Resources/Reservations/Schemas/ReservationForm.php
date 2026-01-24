@@ -34,9 +34,7 @@ class ReservationForm
                     ->searchable()
                     ->preload()
                     ->required(),
-                Toggle::make('status')
-                    ->label('Estado')
-                    ->required(),
+
                 \Filament\Forms\Components\Repeater::make('reservationDetails')
                     ->relationship('reservationDetails')
                     ->schema([
@@ -104,21 +102,39 @@ class ReservationForm
                                 $carbonDate = \Carbon\Carbon::parse($date);
                                 $days = \Carbon\Carbon::now()->diffInDays($carbonDate, false);
 
-                                $color = "yellow";
-                                $text = "Disponible el: <span style='color: {$color}; font-weight: bold;'>{$date}</span>";
-                                
-                                if ($days <= 4 && $days >= 0) {
-                                    $text .= " (Se marcará como <span style='color: orange;'>PENDIENTE</span>)";
+                                if ($days >= 5) {
+                                    return new \Illuminate\Support\HtmlString("<span style='color: red; font-weight: bold;'>Faltan {$days} días para que el libro esté disponible</span>");
                                 }
 
-                                return new \Illuminate\Support\HtmlString($text);
+                                if ($days >= 0) {
+                                    return new \Illuminate\Support\HtmlString("<span style='color: yellow; font-weight: bold;'>Faltan {$days} días para que el libro esté disponible</span> (Se marcará como <span style='color: orange;'>PENDIENTE</span>)");
+                                }
+
+                                return null;
                             })
+                            ->rules([
+                                function (Get $get) {
+                                    return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                        if (!$value) return;
+
+                                        $copy = \App\Models\CopyBook::find($value);
+                                        if (!$copy || $copy->status) return;
+
+                                        $date = $copy->nextAvailableDate();
+                                        if (!$date) return;
+
+                                        $carbonDate = \Carbon\Carbon::parse($date);
+                                        $days = \Carbon\Carbon::now()->diffInDays($carbonDate, false);
+
+                                        if ($days >= 5) {
+                                            $fail("Faltan {$days} días para que el libro esté disponible. No se puede realizar la reserva.");
+                                        }
+                                    };
+                                },
+                            ])
                             ->hidden(fn (Get $get) => ! $get('book_id'))
                             ->required(),
-                        Toggle::make('status')
-                            ->label('Estado')
-                            ->default(true)
-                            ->required(),
+
                     ])
                     ->label('Detalles de la Reserva')
                     ->columnSpanFull()
