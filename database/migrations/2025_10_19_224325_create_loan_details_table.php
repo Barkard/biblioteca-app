@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->foreignId('copy_book_id')->constrained('copy_books')->onDelete('restrict');
             $table->foreignId('loan_return_id')->constrained('loan_returns')->onDelete('restrict');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

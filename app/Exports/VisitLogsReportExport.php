@@ -17,8 +17,8 @@ class VisitLogsReportExport implements FromView, WithStyles
 
     public function __construct($dateFrom, $dateTo)
     {
-        $this->dateFrom = Carbon::parse($dateFrom)->startOfDay();
-        $this->dateTo = Carbon::parse($dateTo)->endOfDay();
+        $this->dateFrom = Carbon::parse($dateFrom);
+        $this->dateTo = Carbon::parse($dateTo);
     }
 
     public function styles(Worksheet $sheet)
@@ -31,7 +31,10 @@ class VisitLogsReportExport implements FromView, WithStyles
 
     public function view(): View
     {
-        $logs = VisitLog::whereBetween('created_at', [$this->dateFrom, $this->dateTo])->get();
+        $logs = VisitLog::query()
+            ->whereDate('created_at', '>=', $this->dateFrom)
+            ->whereDate('created_at', '<=', $this->dateTo)
+            ->get();
 
         $counts = [
             '0-11'  => ['male' => 0, 'female' => 0],
