@@ -145,6 +145,11 @@
                             <div class="value">{{ $user->nationality }}-{{ $user->id_user }}</div>
                         </div>
 
+                        <div style="margin-bottom: 2pt;">
+                            <div class="label">ROL</div>
+                            <div class="value">{{ strtoupper($user->role->name ?? '') }}</div>
+                        </div>
+
                         <!-- Dates -->
                         <table class="dates-table">
                             <tr>
