@@ -2,58 +2,48 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser; // IMPORTANTE
+use Filament\Panel; // IMPORTANTE
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser // IMPLEMENTAR INTERFAZ
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
-        'second_name',
-        'last_name',
-        'second_last_name',
-        'role_id',
-        'email',
-        'password',
-        'nationality',
-        'country_code',
-        'phone',
-        'id_user',
-        'birthdate',
-        'status'
+        'name','second_name','last_name','second_last_name',
+        'role_id','email','password','nationality',
+        'country_code','phone','id_user','birthdate','status'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Determina quién puede entrar al panel de Filament.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Opción A: Permitir a todos los usuarios registrados (Solo para pruebas)
+        return true;
+
+        /*
+        Opción B: Solo permitir a un rol específico (Recomendado)
+        return $this->role_id === 1; // Asumiendo que 1 es Admin
+        */
     }
 
     public function role()
@@ -66,20 +56,12 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
-    // asignar role id 3 al crear el usuario
     protected static function booted()
     {
         static::creating(function ($user) {
             if (is_null($user->role_id)) {
-                $user->role_id = 3; // ID del role 'User'
+                $user->role_id = 3;
             }
         });
     }
-
 }
-
-/*
-
-
-php artisan make:filament-resource ReservationDetail --generate
-*/
