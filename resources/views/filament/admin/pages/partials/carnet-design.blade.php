@@ -22,6 +22,10 @@
                     <span style="font-weight: bold; color: #555; font-size: 8px;">CÉDULA DE IDENTIDAD</span><br>
                     <span style="font-weight: bold; font-size: 11px; color: #000;">{{ $user->nationality }}-{{ $user->id_user }}</span>
                 </div>
+                <div style="margin-bottom: 6px;">
+                    <span style="font-weight: bold; color: #555; font-size: 8px;">ROL</span><br>
+                    <span style="font-weight: bold; font-size: 11px; color: #000;">{{ strtoupper($user->role->name ?? '') }}</span>
+                </div>
             </div>
             
             <div style="font-size: 8px; color: #333; margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px; display: flex; justify-content: space-between;">
