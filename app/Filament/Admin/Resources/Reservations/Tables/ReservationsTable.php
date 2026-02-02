@@ -16,10 +16,6 @@ class ReservationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('reservation_date')
-                    ->label('Fecha de Reserva')
-                    ->date()
-                    ->sortable(),
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
@@ -103,7 +99,7 @@ class ReservationsTable
                     ->visible(function (\App\Models\Reservation $record) {
                         // Visible only if all copies are available and reservation is active/pending
                         if ($record->status === 'finalizada') return false;
-                        
+
                         return $record->reservationDetails->every(fn ($detail) => $detail->copyBook?->status);
                     }),
                 EditAction::make(),
