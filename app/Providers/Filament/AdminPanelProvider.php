@@ -59,6 +59,20 @@ class AdminPanelProvider extends PanelProvider
                         background-color: #3a232aff !important;
                     }
 
+                    /* Brand Logo Fix (Light/Dark Toggle) */
+                    [src*="world-book-day.svg"] {
+                        display: block !important;
+                    }
+                    html.dark [src*="world-book-day.svg"] {
+                        display: none !important;
+                    }
+                    [src*="world-book-day-dark.svg"] {
+                        display: none !important;
+                    }
+                    html.dark [src*="world-book-day-dark.svg"] {
+                        display: block !important;
+                    }
+
                     /* Sidebar (Menú lateral) rojo al pasar el mouse */
                     .fi-sidebar-item:hover,
                     .fi-sidebar-item:hover > a,

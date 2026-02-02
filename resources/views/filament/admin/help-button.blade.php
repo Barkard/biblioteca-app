@@ -34,9 +34,9 @@
     }
 </style>
 
-<a 
-    href="{{ url('/admin/manual') }}" 
-    title="Manual de Ayuda"
+<a
+    href="{{ url('admin/manual-de-usuario') }}"
+    title="Manual de Usuario"
     class="floating-help-btn"
 >
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 24px; height: 24px;">

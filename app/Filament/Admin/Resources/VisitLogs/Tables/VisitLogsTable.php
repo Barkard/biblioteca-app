@@ -19,19 +19,29 @@ class VisitLogsTable
         return $table
             ->columns([
                 TextColumn::make('id_user')
+                    ->label('Cédula')
                     ->numeric()
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('gender')
+                    ->label('Género')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'female' => 'Femenino',
+                        'male' => 'Masculino',
+                        default => $state,
+                    })
                     ->searchable(),
                 TextColumn::make('age')
+                    ->label('Edad')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Fecha de Registro')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Última Actualización')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

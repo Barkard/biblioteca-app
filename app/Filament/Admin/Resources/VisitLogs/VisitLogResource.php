@@ -20,7 +20,13 @@ class VisitLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'VisitLog';
+    protected static ?string $navigationLabel = 'Registro de Visitas';
+
+    protected static ?string $modelLabel = 'Visita';
+
+    protected static ?string $pluralModelLabel = 'Registro de Visitas';
+
+    protected static ?string $recordTitleAttribute = 'id_user';
 
     public static function form(Schema $schema): Schema
     {
