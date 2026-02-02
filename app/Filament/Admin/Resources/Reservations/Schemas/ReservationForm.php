@@ -41,9 +41,9 @@ class ReservationForm
                             ->searchable()
                             ->getSearchResultsUsing(function (string $search) {
                                 return \App\Models\Book::query()
-                                    ->where('title', 'like', "%{$search}%")
+                                    ->where('title', 'ilike', "%{$search}%")
                                     ->orWhereHas('copyBooks', function ($query) use ($search) {
-                                        $query->where('cota', 'like', "%{$search}%");
+                                        $query->where('cota', 'ilike', "%{$search}%");
                                     })
                                     ->withCount(['copyBooks as available_copies_count' => function ($query) {
                                         $query->where('status', true);
