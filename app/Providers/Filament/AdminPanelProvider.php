@@ -87,6 +87,23 @@ class AdminPanelProvider extends PanelProvider
                     }
 
                     /* Cabecera de Tabla (Coincidir con Topbar) */
+                    html:not(.dark) .fi-ta-header {
+                        background-color: #997d5f !important; /* Marrón/Bronce */
+                        color: #ffffff !important;
+                        border-top-left-radius: 10px !important;
+                        border-top-right-radius: 10px !important;
+                    }
+                    html.dark .fi-ta-header {
+                        background-color: #181415 !important; /* Marrón/Bronce */
+                        color: #ffffff !important;
+                        border-top-left-radius: 10px !important;
+                        border-top-right-radius: 10px !important;
+                    }
+                    .fi-ta-ctn fi-ta-ctn-with-header {
+                        border-top-left-radius: 10px !important;
+                        border-top-right-radius: 10px !important;
+                    }
+                    
                     html:not(.dark) .fi-ta-header-cell {
                         background-color: #997d5f !important; /* Marrón/Bronce */
                         color: #ffffff !important;
@@ -182,9 +199,11 @@ class AdminPanelProvider extends PanelProvider
                     }
                     html:not(.dark) .fi-ta-main {
                     border-color: #997d5fff !important;
+                    border-radius: 10px !important;
                     }
                     html.dark .fi-ta-main {
                         border-color: #181415ff !important;
+                        border-radius: 10px !important;
                     }
 
                     /* Buscador: Fondo blanco y texto negro */
@@ -472,13 +491,57 @@ class AdminPanelProvider extends PanelProvider
                     html.dark .fi-input-wrp input::placeholder {
                         color: #71717a !important;
                     }
-
+                    
                 </style>
 HTML
             )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
-                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-center mb-4"><x-filament-panels::theme-switcher /></div>'),
+                fn (): string => \Illuminate\Support\Facades\Blade::render('<div class="flex justify-center mb-4" x-data="{ close: () => {} }"><x-filament-panels::theme-switcher /></div>'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::FOOTER,
+                fn (): string => request()->routeIs('filament.admin.auth.login') ? '' : view('filament.admin.footer')->render(),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::HEAD_END,
+                fn (): string => '<style>
+                    /* Custom Widget Styles */
+                    .custom-welcome-widget, 
+                    .custom-quick-actions-widget,
+                    .custom-stat-card,
+                    .custom-activity-log {
+                        background-color: #997d5f !important;
+                        color: white !important;
+                        border-radius: 10px !important;
+                        overflow: hidden !important;
+                    }
+
+                    .custom-stat-card > div, 
+                    .custom-stat-card span,
+                    .custom-activity-log,
+                    .custom-activity-log .fi-ta-header-heading {
+                        color: white !important;
+                    }
+
+                    html.dark .custom-welcome-widget, 
+                    html.dark .custom-quick-actions-widget,
+                    html.dark .custom-stat-card,
+                    html.dark .custom-activity-log {
+                        background-color: #181415 !important;
+                        border: 1px solid #374151; /* Optional border for dark mode */
+                        border-radius: 10px !important;
+                    }
+                    
+                    /* Override Filament generic card backgrounds if needed */
+                    .custom-stat-card {
+                        --tw-bg-opacity: 1;
+                    }
+                </style>',
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::BODY_END,
+                fn (): string => request()->routeIs('filament.admin.auth.login') ? '' : view('filament.admin.help-button')->render(),
             )
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
