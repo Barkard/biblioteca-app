@@ -29,13 +29,19 @@ class SendLoanDueNotifications implements ShouldQueue
      */
     public function handle(): void
     {
-        $dueDate = Carbon::now()->addDays(2)->format('Y-m-d');
+        // Rango: Desde HOY hasta dentro de 2 DÍAS
+        $startDate = Carbon::now()->format('Y-m-d');
+        $endDate = Carbon::now()->addDays(2)->format('Y-m-d');
+
+        Log::info("WAPP_JOB: Buscando préstamos pendientes entre {$startDate} y {$endDate}...");
 
         $loans = LoanReturn::query()
+            ->with(['user', 'loanDetails.copyBook.book'])
             ->where('status', true) 
-            ->whereDate('return_date', $dueDate)
-            ->with('user')
+            ->whereBetween('return_date', [$startDate, $endDate])
             ->get();
+
+        Log::info("WAPP_JOB: Préstamos encontrados: " . $loans->count());
 
         foreach ($loans as $loan) {
             $user = $loan->user;
@@ -43,7 +49,9 @@ class SendLoanDueNotifications implements ShouldQueue
             if ($user && $user->phone && $user->country_code) {
                 // Formato telefónico (quitar el +) -> 584121234567
                 $phoneNumber = str_replace('+', '', $user->country_code . $user->phone); 
-                $message = "Hola {$user->name}, te recordamos que tu préstamo del libro vence el {$dueDate}. Por favor realiza la devolución a tiempo.";
+                
+                $msgDate = Carbon::parse($loan->return_date)->format('d/m/Y');
+                $message = "Hola {$user->name}, recordatorio de Biblioteca: Tu prestamo vence el {$msgDate}.";
                 
                 // --- OPCIÓN 3: Gateway Local (whatsapp-web.js) ---
                 // Servidor Node.js corriendo en el puerto 3001

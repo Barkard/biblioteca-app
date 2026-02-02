@@ -12,6 +12,9 @@ use App\Jobs\SendLoanDueNotifications;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\LoanReturn;
+use App\Models\LoanDetail;
+use App\Models\Reservation;
+use App\Models\ReservationDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -22,8 +25,20 @@ Artisan::command('test:whatsapp', function () {
     // Limpiar usuario previo (primero eliminar dependencias)
     $users = User::where('email', 'test_wapp@example.com')->orWhere('id_user', 12345678)->get();
     foreach($users as $u) {
-        // Borrar préstamos asociados al usuario de prueba para evitar error de FK
-        LoanReturn::where('user_id', $u->id)->delete();
+        // 1. Borrar detalles y préstamos asociados
+        $loans = LoanReturn::where('user_id', $u->id)->get();
+        foreach($loans as $l) {
+             LoanDetail::where('loan_return_id', $l->id)->delete();
+             $l->delete();
+        }
+
+        // 2. Borrar reservaciones y sus detalles
+        $reservations = Reservation::where('user_id', $u->id)->get();
+        foreach($reservations as $r) {
+            ReservationDetail::where('reservation_id', $r->id)->delete();
+            $r->delete();
+        }
+
         $u->delete();
     }
 
@@ -40,7 +55,7 @@ Artisan::command('test:whatsapp', function () {
             'nationality' => 'V',
             'id_user' => 12345678,
             'country_code' => '+58',
-            'phone' => '4147417970',
+            'phone' => '4165026559',
             'status' => true,
         ]
     );
@@ -76,7 +91,7 @@ Artisan::command('test:whatsapp', function () {
                  $phoneNumber = str_replace('+', '', $u->country_code . $u->phone);
                  $this->comment(" -> ENCONTRADO: {$u->name}. Intentando enviar mensaje a {$phoneNumber}...");
                  
-                 $message = "Eri gay?";
+                 $message = "Hola {$u->name}, esto es una prueba de la Biblioteca. Tu prestamo vence el {$dueDate}.";
                  
                  // --- CAMBIO A GATEWAY LOCAL ---
                  // $apiKey = '4154492';
@@ -112,5 +127,5 @@ Artisan::command('test:whatsapp', function () {
 
 })->purpose('Test Whatsapp Logic');
 
-Schedule::job(new SendLoanDueNotifications)->dailyAt('06:00');
+Schedule::job(new SendLoanDueNotifications)->dailyAt('10:00');
 
