@@ -5,6 +5,7 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
+@source '../views/filament/admin/pages/*.blade.php';
 @source '../**/*.js';
 @import "flowbite/src/themes/default";
 @source "../../node_modules/flowbite";
