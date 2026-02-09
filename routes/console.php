@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-
+//aa
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
@@ -47,7 +47,7 @@ Artisan::command('test:whatsapp', function () {
         [
             'email' => 'test_wapp@example.com',
             'name' => 'Kevin',
-            'second_name' => 'Test', 
+            'second_name' => 'Test',
             'last_name' => 'User',
             'second_last_name' => '',
             'role_id' => Role::first()?->id ?? 1,
@@ -68,15 +68,15 @@ Artisan::command('test:whatsapp', function () {
         'return_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
         'status' => true,
     ]);
-    
+
     $this->info("Préstamo creado ID: {$loan->id} para fecha: {$loan->return_date}");
 
     // 3. Ejecutar Lógica del Job
     $this->info('Ejecutando lógica de notificación...');
-    
+
     $dueDate = Carbon::now()->addDays(2)->format('Y-m-d');
     $loans = LoanReturn::query()
-            ->where('status', true) 
+            ->where('status', true)
             ->whereDate('return_date', $dueDate)
             ->with('user')
             ->get();
@@ -85,26 +85,26 @@ Artisan::command('test:whatsapp', function () {
     foreach ($loans as $loanItem) {
         $u = $loanItem->user;
         if ($u && $u->phone && $u->country_code) {
-             
+
              // Check if it's our test user
              if($u->id == $user->id) {
                  $phoneNumber = str_replace('+', '', $u->country_code . $u->phone);
                  $this->comment(" -> ENCONTRADO: {$u->name}. Intentando enviar mensaje a {$phoneNumber}...");
-                 
+
                  $message = "Hola {$u->name}, esto es una prueba de la Biblioteca. Tu prestamo vence el {$dueDate}.";
-                 
+
                  // --- CAMBIO A GATEWAY LOCAL ---
                  // $apiKey = '4154492';
                  // $url = "https://api.callmebot.com/whatsapp.php?phone={$phoneNumber}&text=" . urlencode($message) . "&apikey={$apiKey}";
 
                  $url = "http://localhost:3001/send?phone={$phoneNumber}&message=" . urlencode($message);
                  $this->info(" -> URL LOCAL: $url");
-                 
+
                  try {
                      $response = Http::timeout(15)->get($url);
                      $this->info(" -> STATUS: " . $response->status());
                      $this->info(" -> BODY: " . $response->body());
-                     
+
                      if ($response->successful()) {
                          $this->info(' -> MENSAJE ENVIADO CORRECTAMENTE (Según API)');
                      } else {
