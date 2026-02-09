@@ -50,7 +50,10 @@ class GenerateCarnet extends Page implements HasForms
                                     ->mapWithKeys(fn ($user) => [$user->id => "{$user->nationality}-{$user->id_user} {$user->name} {$user->last_name}"]))
                                 ->getOptionLabelUsing(fn ($value): ?string => ($user = User::find($value)) ? "{$user->nationality}-{$user->id_user} {$user->name} {$user->last_name}" : null)
                                 ->required()
-                                ->live(), 
+                                ->validationMessages([
+                                    'required' => 'Debe seleccionar un usuario para poder continuar con la generación del carnet.',
+                                ])
+                                ->live(),
                         ]),
                     Wizard\Step::make('Previsualización')
                         ->schema([
@@ -65,9 +68,9 @@ class GenerateCarnet extends Page implements HasForms
                         ]),
                 ])
                 ->submitAction(new HtmlString(Blade::render(<<<HTML
-                    <x-filament::button 
-                        type="submit" 
-                        wire:loading.attr="disabled" 
+                    <x-filament::button
+                        type="submit"
+                        wire:loading.attr="disabled"
                         wire:target="generate"
                         x-on:click="\$dispatch('start-generation')"
                     >
@@ -91,7 +94,7 @@ class GenerateCarnet extends Page implements HasForms
     public function generate()
     {
         $user = $this->getUserProperty();
-        
+
         if (!$user) {
             Notification::make()
                 ->title('Error')
