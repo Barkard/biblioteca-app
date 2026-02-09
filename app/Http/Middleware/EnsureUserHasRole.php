@@ -24,8 +24,10 @@ class EnsureUserHasRole
 
         Log::info("EnsureUserHasRole: usuario {$user->id} con rol '{$roleName}' accediendo al panel '{$panel}'");
 
-        // Si el usuario no es Admin, no tiene acceso al panel admin
-        if (strcasecmp($roleName ?? '', 'Admin') !== 0) {
+        // Permitimos acceso a Admin y Staff
+        $allowedRoles = ['Admin', 'Staff'];
+        
+        if (!in_array($roleName, $allowedRoles)) {
             abort(403, 'No tienes acceso a este panel.');
         }
 

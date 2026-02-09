@@ -21,7 +21,9 @@ class LoanReturnsTable
                     ->sortable(),
                 IconColumn::make('status')
                     ->label('Estado')
-                    ->boolean(),
+                    ->icon(fn ($state) => $state === 'activo' || $state == 1 ? 'heroicon-o-clock' : 'heroicon-o-check-circle')
+                    ->color(fn ($state) => $state === 'activo' || $state == 1 ? 'warning' : 'success')
+                    ->tooltip(fn ($state) => $state === 'activo' || $state == 1 ? 'Pendiente' : 'Completado'),
                 TextColumn::make('user.name')
                     ->label('Usuario')
                     ->numeric()
