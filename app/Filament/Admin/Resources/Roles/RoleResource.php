@@ -43,6 +43,13 @@ class RoleResource extends Resource
         ];
     }
 
+    public static function canViewAny(): bool
+    {
+        /** @var \App\Models\User */
+        $user = auth()->user();
+        return $user->role_id !== 2 && $user->role?->name !== 'Staff';
+    }
+
     public static function getPages(): array
     {
         return [

@@ -43,6 +43,12 @@ class UserResource extends Resource
         ];
     }
 
+    public static function canViewAny(): bool
+    {
+        // Permitir acceso a Admin y Staff
+        return true;
+    }
+
     public static function getPages(): array
     {
         return [

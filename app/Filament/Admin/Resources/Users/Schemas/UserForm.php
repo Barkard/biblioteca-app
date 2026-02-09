@@ -48,7 +48,10 @@ class UserForm
                 TextInput::make('password')
                     ->label('Contraseña')
                     ->password()
-                    ->required(),
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $operation) => $operation === 'create' && auth()->user()->role_id !== 2)
+                    ->disabled(fn (string $operation) => $operation === 'create' && auth()->user()->role_id === 2)
+                    ->helperText(fn (string $operation) => $operation === 'create' && auth()->user()->role_id === 2 ? 'La contraseña se generará automáticamente usando la Cédula.' : null),
                 Select::make('country_code')
                     ->label('Código de País')
                     ->options([
@@ -63,9 +66,9 @@ class UserForm
                 Select::make('role_id')
                     ->label('Role')
                     ->relationship('role', 'name')
-                    ->required(),
-                Toggle::make('status')
-                    ->label('Estado')
+                    ->default(fn () => auth()->user()->role_id === 2 ? 3 : null) // Default to Reader for Staff
+                    ->disabled(fn () => auth()->user()->role_id === 2) // Blocked for Staff
+                    ->dehydrated() // Ensure value is sent
                     ->required(),
                 DateTimePicker::make('created_at')
                     ->label('Fecha de creación')
