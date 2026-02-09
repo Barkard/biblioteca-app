@@ -117,7 +117,7 @@ class AdminPanelProvider extends PanelProvider
                         border-top-left-radius: 10px !important;
                         border-top-right-radius: 10px !important;
                     }
-                    
+
                     html:not(.dark) .fi-ta-header-cell {
                         background-color: #997d5f !important; /* Marrón/Bronce */
                         color: #ffffff !important;
@@ -505,7 +505,7 @@ class AdminPanelProvider extends PanelProvider
                     html.dark .fi-input-wrp input::placeholder {
                         color: #71717a !important;
                     }
-                    
+
                 </style>
 HTML
             )
@@ -521,7 +521,7 @@ HTML
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 fn (): string => '<style>
                     /* Custom Widget Styles */
-                    .custom-welcome-widget, 
+                    .custom-welcome-widget,
                     .custom-quick-actions-widget,
                     .custom-stat-card,
                     .custom-activity-log {
@@ -531,14 +531,14 @@ HTML
                         overflow: hidden !important;
                     }
 
-                    .custom-stat-card > div, 
+                    .custom-stat-card > div,
                     .custom-stat-card span,
                     .custom-activity-log,
                     .custom-activity-log .fi-ta-header-heading {
                         color: white !important;
                     }
 
-                    html.dark .custom-welcome-widget, 
+                    html.dark .custom-welcome-widget,
                     html.dark .custom-quick-actions-widget,
                     html.dark .custom-stat-card,
                     html.dark .custom-activity-log {
@@ -546,7 +546,7 @@ HTML
                         border: 1px solid #374151; /* Optional border for dark mode */
                         border-radius: 10px !important;
                     }
-                    
+
                     /* Override Filament generic card backgrounds if needed */
                     .custom-stat-card {
                         --tw-bg-opacity: 1;
@@ -555,7 +555,7 @@ HTML
             )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,
-                fn (): string => request()->routeIs('filament.admin.auth.login') ? '' : view('filament.admin.help-button')->render(),
+                fn (): string => request()->routeIs('filament.admin.auth.login') ? '' : view('filament.admin.help-button')->toHtml() . view('filament.admin.tutorials')->toHtml(),
             )
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
