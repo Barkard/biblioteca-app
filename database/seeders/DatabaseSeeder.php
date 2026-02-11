@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
         $this->call(\Database\Seeders\RoleSeeder::class);
 
         User::factory()->create([
-            'name' => 'Biscocho',
-            'last_name' => 'Gay',
-            'email' => 'biscochogay@gmail.com',
-            'password' => '1234',
+            'name' => 'Admin',
+            'last_name' => 'test',
+            'email' => 'admin@gmail.com',
+            'password' => '123456789',
             'id_user' => '12345678',
             'nationality' => 'V',
             'role_id' => 1,
